@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H&J Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+        }
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .burger-menu {
+            position: relative;
+        }
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            background-color: #333;
+            border: 1px solid #444;
+            padding: 10px;
+            z-index: 1000;
+        }
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+        #burger-menu a:hover {
+            background-color: #444;
+        }
+        .dropdown-container {
+            text-align: center;
+            margin: 20px;
+        }
+        .chart-container {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Configuration</a>
+                <a href="historique.html">Historique</a>
+            </div>
+        </div>
+        <div class="logo">H&J</div>
+    </header>
+    <main>
+        <div class="dropdown-container">
+            <label for="variable-select">Choisissez une variable :</label>
+            <select id="variable-select">
+                <option value="temp">Température</option>
+                <option value="voyant">Voyant</option>
+            </select>
+        </div>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </main>
+    <script>
+        // Gestion du menu burger
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Initialisation de Chart.js
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Température',
+                    data: [12, 19, 3, 5, 2],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Gestion du changement de variable
+        document.getElementById("variable-select").addEventListener("change", (e) => {
+            const selectedVariable = e.target.value;
+            // Mise à jour des données du graphique
+            myChart.data.datasets[0].label = selectedVariable === "temp" ? "Température" : "Voyant";
+            myChart.data.datasets[0].data = selectedVariable === "temp" ? [12, 19, 3, 5, 2] : [7, 8, 6, 4, 3];
+            myChart.update();
+        });
+    </script>
+</body>
+</html>
