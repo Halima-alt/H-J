@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier une variable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #E5B8C7;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .form-container {
+            margin: 50px auto;
+            width: 50%;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #F5D6E0;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E5B8C7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Modifier la variable</h1>
+    </header>
+    <main>
+        <div class="form-container">
+            <form id="modifForm">
+                <input type="text" id="variableName" placeholder="Nom de la variable" required>
+                <button type="submit">Modifier</button>
+            </form>
+        </div>
+    </main>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const variable = params.get("variable");
+
+        if (variable) {
+            document.getElementById("variableName").value = variable;
+        }
+
+        document.getElementById("modifForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const modifiedVariable = document.getElementById("variableName").value;
+
+            window.location.href = `config.html?modifiedVariable=${modifiedVariable}`;
+        });
+    </script>
+</body>
+</html>
