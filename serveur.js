@@ -77,4 +77,41 @@ const pool = mariadb.createPool({
         }
       });
 
+
+    // AUTOMATE         AUTOMATE        AUTOMATE        AUTOMATE        AUTOMATE
+    app.post('/automate', async (req, res) => {
+        try {
+          const {ID_AUTOMATE, Nom, IP, Type} = req.body;
+          
+          // Vérification des données fournies
+          if (ID_AUTOMATE === undefined || Nom === undefined || IP === undefined || Type === undefined) {
+            return res.status(400).json({ error: 'Données invalides fournies' });
+          }
       
+          // Connexion à la base de données et insertion des données
+          const conn = await pool.getConnection();
+          const result = await conn.query('INSERT INTO status (ID_AUTOMATE, Nom, IP, Type) VALUES (?, ?, ?, ?)', 
+            [ID_AUTOMATE, Nom, IP, Type]
+          );
+          conn.release();
+      
+          // Réponse avec l'ID de l'enregistrement ajouté et les données fournies
+          res.status(201).json({ id: Number(result.insertId), ID_AUTOMATE, Nom, IP, Type});
+          
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Erreur lors de l\'ajout d\'un automate ' });
+        }
+      });
+
+      app.get('/automate', async (req, res) => {
+        try {
+          const conn = await pool.getConnection();
+          const result = await conn.query('SELECT * FROM automate'); // Sélectionne toutes les maisons
+          conn.release();
+          res.status(200).json(result); // Renvoie les résultats au format JSON
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Erreur lors de la récupération des variables' }); // Gestion des erreurs
+        }
+      });
