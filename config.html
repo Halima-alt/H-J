@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Config - Variables</title>
     <style>
-        /* Style global */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -16,17 +15,35 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #E5B8C7; /* Rose poudré */
+            background-color: #E5B8C7;
             padding: 10px 20px;
             position: sticky;
             top: 0;
-            z-index: 1000;
         }
 
         .logo {
             width: 50px;
             height: auto;
             cursor: pointer;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
         }
 
         .table-container {
@@ -81,6 +98,7 @@
     <header>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
+    <div class="back-button" onclick="history.back()">← Retour</div>
     <main>
         <div class="table-container">
             <table>
