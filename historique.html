@@ -21,7 +21,51 @@
             top: 0;
         }
 
+        .burger-menu {
+            position: absolute;
+            left: 20px;
+        }
+
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
         .logo {
+            position: absolute;
+            right: 20px;
             width: 50px;
             height: auto;
             cursor: pointer;
@@ -40,7 +84,7 @@
 
         th, td {
             padding: 10px;
-            text-align: left;
+            text-align: center;
             border: 1px solid #ddd;
         }
 
@@ -49,27 +93,12 @@
             color: white;
         }
 
-        .filter-container {
-            width: 80%;
-            margin: auto;
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .filter-container input[type="date"] {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
         .export-button {
+            margin-top: 20px;
             background-color: #F5D6E0;
             color: white;
-            border: none;
             padding: 10px 20px;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
         }
@@ -77,33 +106,23 @@
         .export-button:hover {
             background-color: #E5B8C7;
         }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
     </style>
 </head>
 <body>
     <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+                <a href="main.html">Dashboard</a>
+            </div>
+        </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
-        <h1>Historique</h1>
     </header>
     <main>
-        <div class="filter-container">
-            <label for="startDate">Du :</label>
-            <input type="date" id="startDate">
-            <label for="endDate">Au :</label>
-            <input type="date" id="endDate">
-            <div class="checkbox-container">
-                <input type="checkbox" id="extractAll" onchange="toggleDateInputs()">
-                <label for="extractAll">Tout extraire</label>
-            </div>
-            <button class="export-button" onclick="exportFilteredCSV()">Extraire</button>
-        </div>
         <div class="table-container">
-            <table id="historiqueTable">
+            <table>
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -112,88 +131,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- L'historique sera ajouté ici dynamiquement -->
+                    <tr>
+                        <td>2024-11-27</td>
+                        <td>Ajout</td>
+                        <td>Variable Température ajoutée</td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-28</td>
+                        <td>Modification</td>
+                        <td>Variable Voyant modifiée</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
+        <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
     </main>
     <script>
-        // Exemple de données d'historique
-        const historiqueData = [
-            { date: "2024-11-15", action: "Ajout", details: "Variable Température ajoutée" },
-            { date: "2024-11-16", action: "Modification", details: "Variable Voyant modifiée" },
-            { date: "2024-11-17", action: "Suppression", details: "Variable Humidité supprimée" },
-            { date: "2024-11-18", action: "Ajout", details: "Variable Pression ajoutée" },
-            { date: "2024-11-19", action: "Modification", details: "Variable Altitude modifiée" }
-        ];
-
-        // Afficher l'historique dans le tableau
-        const tableBody = document.getElementById("historiqueTable").querySelector("tbody");
-
-        function displayHistorique(data) {
-            tableBody.innerHTML = "";
-            data.forEach(item => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${item.date}</td>
-                    <td>${item.action}</td>
-                    <td>${item.details}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Initial display
-        displayHistorique(historiqueData);
-
-        // Activer/désactiver les champs de date
-        function toggleDateInputs() {
-            const isChecked = document.getElementById("extractAll").checked;
-            document.getElementById("startDate").disabled = isChecked;
-            document.getElementById("endDate").disabled = isChecked;
-        }
-
-        // Fonction pour exporter les données filtrées en CSV
-        function exportFilteredCSV() {
-            const isExtractAll = document.getElementById("extractAll").checked;
-            let filteredData = historiqueData;
-
-            if (!isExtractAll) {
-                const startDate = document.getElementById("startDate").value;
-                const endDate = document.getElementById("endDate").value;
-
-                if (!startDate || !endDate) {
-                    alert("Veuillez sélectionner une plage de dates ou cocher 'Tout extraire' !");
-                    return;
-                }
-
-                filteredData = historiqueData.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
-                });
-
-                if (filteredData.length === 0) {
-                    alert("Aucune donnée trouvée pour la plage de dates sélectionnée !");
-                    return;
-                }
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Date,Action,Détails\n"; // En-tête du fichier CSV
-
-            filteredData.forEach(item => {
-                csvContent += `${item.date},${item.action},${item.details}\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `historique_${isExtractAll ? "complet" : "filtré"}.csv`);
-            document.body.appendChild(link);
-
-            link.click(); // Téléchargement du fichier CSV
-            document.body.removeChild(link);
-        }
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
     </script>
 </body>
 </html>
