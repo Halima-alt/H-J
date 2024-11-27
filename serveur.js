@@ -42,16 +42,15 @@ const pool = mariadb.createPool({
     // VARIABLE         VARIABLE        VARIABLE           VARIABLE         VARIABLE        VARIABLE        VARIABLE 
     app.post('/variable', async (req, res) => {
         try {
-          const { ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité} = req.body;
-          
-          // Vérification des données fournies
-          if (ID_VARIABLE === undefined || Nom === undefined || IP === undefined || Variable_automate || Fréquence || Valeur || Unité === undefined) {
-            return res.status(400).json({ error: 'Données invalides fournies' });
+          const { ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité } = req.body;
+
+          if (!Nom || !IP || !Variable_automate || Fréquence === undefined || Valeur === undefined || !Unité) {
+            return res.status(400).json({ error: 'Données invalides fournies. Vérifiez les champs manquants ou incorrects.' });
           }
       
           // Connexion à la base de données et insertion des données
           const conn = await pool.getConnection();
-          const result = await conn.query('INSERT INTO status (ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+          const result = await conn.query('INSERT INTO variable (ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité) VALUES (?, ?, ?, ?, ?, ?, ?)', 
             [ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité]
           );
           conn.release();
@@ -90,7 +89,7 @@ const pool = mariadb.createPool({
       
           // Connexion à la base de données et insertion des données
           const conn = await pool.getConnection();
-          const result = await conn.query('INSERT INTO status (ID_AUTOMATE, Nom, IP, Type) VALUES (?, ?, ?, ?)', 
+          const result = await conn.query('INSERT INTO automate (ID_AUTOMATE, Nom, IP, Type) VALUES (?, ?, ?, ?)', 
             [ID_AUTOMATE, Nom, IP, Type]
           );
           conn.release();
@@ -115,3 +114,7 @@ const pool = mariadb.createPool({
           res.status(500).json({ error: 'Erreur lors de la récupération des variables' }); // Gestion des erreurs
         }
       });
+      
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
