@@ -79,19 +79,54 @@
     <div class="back-button" onclick="history.back()">← Retour</div>
     <main>
         <div class="form-container">
-            <form id="ajoutForm">
-                <input type="text" id="newVariable" placeholder="Nom de la variable" required>
-                <button type="submit">Ajouter</button>
+            <h2>Ajouter une nouvelle variable</h2>
+            <form id="ajoutVariableForm">
+                <input type="text" id="Nom" placeholder="Nom" required>
+                <input type="text" id="IP" placeholder="Adresse IP" required>
+                <input type="text" id="Variable_automate" placeholder="Variable Automate" required>
+                <input type="number" id="Frequence" placeholder="Fréquence (ms)" required>
+                <input type="text" id="Unite" placeholder="Unité (e.g., Celsius)" required>
+                <input type="number" id="ID_Automate" placeholder="ID Automate" required>
+                <button type="button" onclick="addVariable()">Ajouter</button>
             </form>
-        </div>
+        </div> 
     </main>
     <script>
-        document.getElementById("ajoutForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const newVariable = document.getElementById("newVariable").value;
+         async function addVariable() {
+            const Nom = document.getElementById('Nom').value;
+            const IP = document.getElementById('IP').value;
+            const Variable_automate = document.getElementById('Variable_automate').value;
+            const Frequence = parseInt(document.getElementById('Frequence').value, 10);
+            const Unite = document.getElementById('Unite').value;
+            const ID_Automate = parseInt(document.getElementById('ID_Automate').value, 10);
 
-            window.location.href = `config.html?newVariable=${newVariable}`;
-        });
+            try {
+                const response = await fetch('http://localhost:3000/variable', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        Nom: Nom,
+                        IP: IP,
+                        Variable_automate: Variable_automate,
+                        Frequence: Frequence,
+                        Unite: Unite,
+                        ID_AUTOMATE: ID_Automate,
+                    }),
+                });
+
+                if (response.ok) {
+                    alert('Variable ajoutée avec succès!');
+                    document.getElementById('ajoutVariableForm').reset(); // Réinitialise le formulaire
+                } else {
+                    alert('Erreur lors de l\'ajout de la variable.');
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout de la variable:', error);
+                alert('Une erreur est survenue.');
+            }
+        }
     </script>
 </body>
 </html>
