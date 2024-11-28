@@ -23,12 +23,20 @@
             z-index: 1000;
         }
 
+<<<<<<< HEAD
 
         .burger-menu {
             position: relative;
         }
 
 
+=======
+        .burger-menu {
+            position: absolute;
+            left: 20px;
+        }
+
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         .burger-menu button {
             background-color: white;
             color: #F5D6E0;
@@ -37,28 +45,43 @@
             font-size: 1.2em;
             border-radius: 5px;
             cursor: pointer;
+<<<<<<< HEAD
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
 
+=======
+        }
+
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         .burger-menu button:hover {
             background-color: #E5B8C7;
             color: white;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         #burger-menu {
             display: none;
             position: absolute;
             top: 50px;
+<<<<<<< HEAD
             left: 0;
+=======
+            left: 20px;
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
             background-color: #F5D6E0;
             border: 1px solid #E5B8C7;
             padding: 10px;
             z-index: 1000;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         #burger-menu a {
             display: block;
             color: white;
@@ -66,12 +89,18 @@
             padding: 5px;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         #burger-menu a:hover {
             background-color: #E5B8C7;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         .logo {
             position: absolute;
             right: 20px;
@@ -126,7 +155,10 @@
             color: white;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         .export-button {
             margin-top: 20px;
             background-color: #F5D6E0;
@@ -150,12 +182,19 @@
             <div id="burger-menu">
                 <a href="config.html">Config</a>
                 <a href="historique.html">Historique</a>
+<<<<<<< HEAD
                 <a href="dashboard.html">Dashboard</a>
+=======
+                <a href="main.html">Dashboard</a>
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
             </div>
         </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
+<<<<<<< HEAD
     <div class="back-button" onclick="history.back()">← Retour</div>
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
     <main>
         <div class="table-container">
             <table>
@@ -172,21 +211,48 @@
                         <th>ID_AUTOMATE</th>
                     </tr>
                 </thead>
+<<<<<<< HEAD
                 <tbody id="historiqueTable">
                     <!-- Historique ajouté ici dynamiquement -->
+=======
+<<<<<<< HEAD:historique.html
+                <tbody>
+                    <tr>
+                        <td>2024-11-27</td>
+                        <td>Ajout</td>
+                        <td>Variable Température ajoutée</td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-28</td>
+                        <td>Modification</td>
+                        <td>Variable Voyant modifiée</td>
+                    </tr>
+=======
+                <tbody id="HistoVar">
+                    <!-- L'historique sera ajouté ici dynamiquement -->
+>>>>>>> 2c055dc73c9aec946b0f74b988f520ac466ca0ae:Front/historique.html
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
                 </tbody>
             </table>
         </div>
         <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
     </main>
     <script>
+<<<<<<< HEAD
         // Gestion du menu burger
+=======
+<<<<<<< HEAD:historique.html
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         document.getElementById("burger-button").addEventListener("click", () => {
             const menu = document.getElementById("burger-menu");
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
+<<<<<<< HEAD
 
 
+=======
+=======
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
         // Exemple de données d'historique
         const historiqueData = [
             { id: 1, nom: "Variable1", ip: "192.168.1.1", automate: "Var1", freq: "50Hz", valeur: "12.5", date: "2024-11-15", unite: "°C", id_automate: "001" },
@@ -218,8 +284,94 @@
         }
 
 
+<<<<<<< HEAD
         // Initial display
         displayHistorique(historiqueData);
+=======
+        // Fonction pour exporter les données filtrées en CSV
+        function exportFilteredCSV() {
+            const isExtractAll = document.getElementById("extractAll").checked;
+            let filteredData = historiqueData;
+
+            if (!isExtractAll) {
+                const startDate = document.getElementById("startDate").value;
+                const endDate = document.getElementById("endDate").value;
+
+                if (!startDate || !endDate) {
+                    alert("Veuillez sélectionner une plage de dates ou cocher 'Tout extraire' !");
+                    return;
+                }
+
+                filteredData = historiqueData.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+                });
+
+                if (filteredData.length === 0) {
+                    alert("Aucune donnée trouvée pour la plage de dates sélectionnée !");
+                    return;
+                }
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Date,Action,Détails\n"; // En-tête du fichier CSV
+
+            filteredData.forEach(item => {
+                csvContent += `${item.date},${item.action},${item.details}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `historique_${isExtractAll ? "complet" : "filtré"}.csv`);
+            document.body.appendChild(link);
+
+            link.click(); // Téléchargement du fichier CSV
+            document.body.removeChild(link);
+        }
+
+        async function fetchVariableAutomate() {
+          try {
+            const response = await fetch('http://localhost:3000/variable');
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            
+            const HistoVar = document.getElementById('HistoVar');
+            HistoVar.innerHTML = '<tr><td colspan="8">Chargement des données...</td></tr>';
+
+            const data = await response.json();
+
+            if (data.length === 0) {
+                HistoVar.innerHTML = '<tr><td colspan="8">Aucune donnée disponible.</td></tr>';
+                return;
+            }
+
+            HistoVar.innerHTML = ''; // Efface l'indicateur de chargement
+            
+            // Pour chaque éléments, on crée une ligne dans le tableau
+            data.forEach(histo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${histo.ID_Variable}</td>
+                <td>${histo.Nom}</td>
+                <td>${histo.IP}</td>
+                <td>${histo.Variable_automate}</td>
+                <td>${histo.Fréquence}</td>
+                <td>${histo.Valeur}</td>
+                <td>${new Date(histo.Date).toLocaleString()}</td>
+                <td>${histo.Unité}</td>
+                <td>${histo.ID_AUTOMATE}</td>
+            `;
+            HistoVar.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données:', error);
+        }
+    }
+    fetchVariableAutomate();
+>>>>>>> 2c055dc73c9aec946b0f74b988f520ac466ca0ae:Front/historique.html
+>>>>>>> ada3fb14290b5906f4e31df643f12734e961003b
     </script>
 </body>
 </html>

@@ -1,3 +1,201 @@
+<<<<<<< HEAD:main.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config - Variables</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #E5B8C7;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .burger-menu {
+            position: absolute;
+            left: 20px; /* Bouton burger aligné à gauche */
+        }
+
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px; /* Position sous le header */
+            left: 20px;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
+        .logo {
+            position: absolute;
+            right: 20px; /* Logo aligné à droite */
+            width: 50px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 100px;
+            left: 15px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
+        }
+
+        .table-container {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        button {
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E5B8C7;
+        }
+
+        .add-button {
+            margin: 20px 0;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+        </div>
+        <img src="logo.jpg" alt="H&J Logo" class="logo">
+    </header>
+    <div class="back-button" onclick="history.back()">← Retour</div>
+    <main>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="variablesTable">
+                    <tr>
+                        <td>Température</td>
+                        <td>
+                            <button onclick="modifierVariable('Température')">Modifier</button>
+                            <button onclick="supprimerVariable(this)">Supprimer</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Voyant</td>
+                        <td>
+                            <button onclick="modifierVariable('Voyant')">Modifier</button>
+                            <button onclick="supprimerVariable(this)">Supprimer</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="add-button" onclick="window.location.href='ajoutconfig.html'">Ajouter une variable</button>
+        </div>
+    </main>
+    <script>
+        // Gestion du menu burger
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        function supprimerVariable(button) {
+            const row = button.parentElement.parentElement;
+            row.remove();
+        }
+
+        function modifierVariable(variable) {
+            window.location.href = `modifconfig.html?variable=${variable}`;
+        }
+    </script>
+</body>
+</html>
+=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -160,3 +358,4 @@
     </script>
 </body>
 </html>
+>>>>>>> 2c055dc73c9aec946b0f74b988f520ac466ca0ae:Front/main.html
