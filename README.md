@@ -43,3 +43,15 @@ installer nodedemon --> https://www.npmjs.com/package/nodemon
     git push origin branchquetuveux  
 
 npm install modbus-serial
+
+
+
+coils boolean lampe 
+holding register entier /autre temp 
+AU logique inversé 
+
+donc connexion.js est capable de lire les data (en 8 bits)
+    Données reçues : [ true,  false, false, false, false, false, false, false ]
+    donc la on lit l'arret d'urgence et donc on peut coi que le 1er bit est true donc il est à 1
+
+    
