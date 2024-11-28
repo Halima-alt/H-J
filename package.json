@@ -3,7 +3,8 @@
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "mariadb": "^3.4.0",
-    "modbus-serial": "^8.0.17"
+    "modbus-serial": "^8.0.17",
+    "node-wifi": "^2.0.16"
   },
   "name": "h-j",
   "version": "1.0.0",
