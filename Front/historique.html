@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #E5B8C7;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .burger-menu {
+            position: absolute;
+            left: 20px;
+        }
+
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
+        .logo {
+            position: absolute;
+            right: 20px;
+            width: 50px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        .table-container {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        .export-button {
+            margin-top: 20px;
+            background-color: #F5D6E0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .export-button:hover {
+            background-color: #E5B8C7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+                <a href="main.html">Dashboard</a>
+            </div>
+        </div>
+        <img src="logo.jpg" alt="H&J Logo" class="logo">
+    </header>
+    <main>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>IP</th>
+                        <th>Variable_automate</th>
+                        <th>Fréquence</th>
+                        <th>Valeur</th>
+                        <th>Date</th>
+                        <th>Unité</th>
+                        <th>ID_AUTOMATE</th>
+                    </tr>
+                </thead>
+<<<<<<< HEAD:historique.html
+                <tbody>
+                    <tr>
+                        <td>2024-11-27</td>
+                        <td>Ajout</td>
+                        <td>Variable Température ajoutée</td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-28</td>
+                        <td>Modification</td>
+                        <td>Variable Voyant modifiée</td>
+                    </tr>
+=======
+                <tbody id="HistoVar">
+                    <!-- L'historique sera ajouté ici dynamiquement -->
+>>>>>>> 2c055dc73c9aec946b0f74b988f520ac466ca0ae:Front/historique.html
+                </tbody>
+            </table>
+        </div>
+        <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
+    </main>
+    <script>
+<<<<<<< HEAD:historique.html
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+=======
+        // Exemple de données d'historique
+
+        // Afficher l'historique dans le tableau
+        const tableBody = document.getElementById("historiqueTable").querySelector("tbody");
+
+        function displayHistorique(data) {
+            tableBody.innerHTML = "";
+            data.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.action}</td>
+                    <td>${item.details}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Activer/désactiver les champs de date
+        function toggleDateInputs() {
+            const isChecked = document.getElementById("extractAll").checked;
+            document.getElementById("startDate").disabled = isChecked;
+            document.getElementById("endDate").disabled = isChecked;
+        }
+
+        // Fonction pour exporter les données filtrées en CSV
+        function exportFilteredCSV() {
+            const isExtractAll = document.getElementById("extractAll").checked;
+            let filteredData = historiqueData;
+
+            if (!isExtractAll) {
+                const startDate = document.getElementById("startDate").value;
+                const endDate = document.getElementById("endDate").value;
+
+                if (!startDate || !endDate) {
+                    alert("Veuillez sélectionner une plage de dates ou cocher 'Tout extraire' !");
+                    return;
+                }
+
+                filteredData = historiqueData.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+                });
+
+                if (filteredData.length === 0) {
+                    alert("Aucune donnée trouvée pour la plage de dates sélectionnée !");
+                    return;
+                }
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Date,Action,Détails\n"; // En-tête du fichier CSV
+
+            filteredData.forEach(item => {
+                csvContent += `${item.date},${item.action},${item.details}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `historique_${isExtractAll ? "complet" : "filtré"}.csv`);
+            document.body.appendChild(link);
+
+            link.click(); // Téléchargement du fichier CSV
+            document.body.removeChild(link);
+        }
+
+        async function fetchVariableAutomate() {
+          try {
+            const response = await fetch('http://localhost:3000/variable');
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            
+            const HistoVar = document.getElementById('HistoVar');
+            HistoVar.innerHTML = '<tr><td colspan="8">Chargement des données...</td></tr>';
+
+            const data = await response.json();
+
+            if (data.length === 0) {
+                HistoVar.innerHTML = '<tr><td colspan="8">Aucune donnée disponible.</td></tr>';
+                return;
+            }
+
+            HistoVar.innerHTML = ''; // Efface l'indicateur de chargement
+            
+            // Pour chaque éléments, on crée une ligne dans le tableau
+            data.forEach(histo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${histo.ID_Variable}</td>
+                <td>${histo.Nom}</td>
+                <td>${histo.IP}</td>
+                <td>${histo.Variable_automate}</td>
+                <td>${histo.Fréquence}</td>
+                <td>${histo.Valeur}</td>
+                <td>${new Date(histo.Date).toLocaleString()}</td>
+                <td>${histo.Unité}</td>
+                <td>${histo.ID_AUTOMATE}</td>
+            `;
+            HistoVar.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données:', error);
+        }
+    }
+    fetchVariableAutomate();
+>>>>>>> 2c055dc73c9aec946b0f74b988f520ac466ca0ae:Front/historique.html
+    </script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD:main.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,3 +195,156 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H&J Dashboard</title>
+    <style>
+        /* Style global */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style pour le header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #E5B8C7; /* Rose poudré plus foncé */
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Style pour le logo */
+        .logo {
+            width: 50px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        /* Style pour le menu burger */
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0; /* Texte rose poudré */
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Effet hover sur le bouton burger */
+        .burger-menu button:hover {
+            background-color: #E5B8C7; /* Rose poudré plus foncé */
+            color: white;
+        }
+
+        /* Style pour le menu déroulant */
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
+        /* Centrer le contenu */
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Utilise toute la hauteur de l'écran */
+            text-align: center;
+        }
+
+        /* Style pour le graphique */
+        .chart-container {
+            width: 80%;
+            max-width: 600px; /* Limite la largeur maximale */
+            margin: 20px auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+            </div>
+        </div>
+        <img src="logo.jpg" alt="H&J Logo" class="logo">
+    </header>
+    <main>
+        <h1>Choisissez une variable :</h1>
+        <select id="variable-select">
+            <option value="temp">Température</option>
+            <option value="voyant">Voyant</option>
+        </select>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </main>
+    <script>
+        // Gestion du menu burger
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Initialisation de Chart.js
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Température',
+                    data: [12, 19, 3, 5, 2],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Gestion du changement de variable
+        document.getElementById("variable-select").addEventListener("change", (e) => {
+            const selectedVariable = e.target.value;
+            // Mise à jour des données du graphique
+            myChart.data.datasets[0].label = selectedVariable === "temp" ? "Température" : "Voyant";
+            myChart.data.datasets[0].data = selectedVariable === "temp" ? [12, 19, 3, 5, 2] : [7, 8, 6, 4, 3];
+            myChart.update();
+        });
+    </script>
+</body>
+</html>
+>>>>>>> 2c055dc73c9aec946b0f74b988f520ac466ca0ae:Front/main.html

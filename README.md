@@ -5,10 +5,11 @@ Avancé
 BDD 
     automate --> Post fonctionne
     variable --> Post fonctionne
+             --> on peut la voir sur historique
 
 
 
-docker 
+docker --> a fiare depuis le pc 
     installer wsl avec accès au bios windows pour activer rv? pour linux 
     installer docker + docker compose  
     installer node.js parce que pas sur les pc école 
@@ -26,3 +27,17 @@ nodemon --> pour redémarrer serveur a chaque fois
 
 
 installer mariadb dans conteneur docker 
+
+nodecron --> https://www.npmjs.com/package/node-cron
+    timer comme dans jenkins 
+    faire un console log a l'intérieur pour voir si ca fonctionne (aparait dans terminal toutes les 10s si choisi)
+
+
+git branch 
+git checkout --> sortir de la branche actuelle 
+
+faire la différence entre le frotn et le back 
+
+installer nodedemon --> https://www.npmjs.com/package/nodemon
+    redémarrage de serveur après chaque changement 
+    git push origin branchquetuveux  

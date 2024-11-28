@@ -41,28 +41,38 @@ const pool = mariadb.createPool({
 
     // VARIABLE         VARIABLE        VARIABLE           VARIABLE         VARIABLE        VARIABLE        VARIABLE 
     app.post('/variable', async (req, res) => {
-        try {
-          const { ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité } = req.body;
-
-          if (!Nom || !IP || !Variable_automate || Fréquence === undefined || Valeur === undefined || !Unité) {
-            return res.status(400).json({ error: 'Données invalides fournies. Vérifiez les champs manquants ou incorrects.' });
+      try {
+          console.log("Requête reçue :", req.body); // Affiche les données reçues
+  
+          const { Nom, IP, Variable_automate, Fréquence, Unité } = req.body;
+  
+          // Vérifiez si les données sont présentes
+          if (!Nom || !IP || !Variable_automate || Fréquence === undefined || !Unité) {
+              console.error("Données invalides :", { Nom, IP, Variable_automate, Fréquence, Unité });
+              return res.status(400).json({ error: 'Données invalides fournies. Vérifiez les champs manquants ou incorrects.' });
           }
-      
-          // Connexion à la base de données et insertion des données
+  
           const conn = await pool.getConnection();
-          const result = await conn.query('INSERT INTO variable (ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité) VALUES (?, ?, ?, ?, ?, ?, ?)', 
-            [ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité]
+          console.log("Connexion à la base de données réussie");
+  
+          // Exécutez la requête SQL
+          const result = await conn.query(
+              'INSERT INTO variable (Nom, IP, Variable_automate, Fréquence, Unité) VALUES (?, ?, ?, ?, ?)', 
+              [Nom, IP, Variable_automate, Fréquence, Unité]
           );
+          console.log("Requête SQL exécutée avec succès :", result);
+  
           conn.release();
-      
-          // Réponse avec l'ID de l'enregistrement ajouté et les données fournies
-          res.status(201).json({ id: Number(result.insertId), ID_VARIABLE, Nom, IP, Variable_automate, Fréquence, Valeur, Unité});
-          
-        } catch (error) {
-          console.error(error);
+          console.log("Connexion à la base de données libérée");
+  
+          // Réponse de succès
+          res.status(201).json({ id: result.insertId, Nom, IP, Variable_automate, Fréquence, Unité });
+      } catch (error) {
+          console.error("Erreur dans POST /variable :", error.message, error.stack);
           res.status(500).json({ error: 'Erreur lors de l\'ajout d\'une variable' });
-        }
-      });
+      }
+  });
+  
 
       app.get('/variable', async (req, res) => {
         try {
@@ -115,6 +125,53 @@ const pool = mariadb.createPool({
         }
       });
       
+// TABLEVALEUR    TABLEVALEUR     TABLEVALEUR     TABLEVALEUR     TABLEVALEUR   TABLEVALEUR   TABLEVALEUR     TABLEVALEUR
+app.post('/tableauvaleur', async (req, res) => {
+  try {
+      console.log("Requête reçue :", req.body); // Log des données reçues
+
+      const { Valeur } = req.body;
+
+      // Vérification des données fournies
+      if (Valeur === undefined) {
+          console.error("Validation échouée : 'Valeur' est manquant ou undefined");
+          return res.status(400).json({ error: 'Données invalides fournies' });
+      }
+
+      const conn = await pool.getConnection();
+      console.log("Connexion à la base de données réussie");
+
+      // Exécution de la requête SQL
+      const result = await conn.query(
+          'INSERT INTO tableauValeur (Valeur) VALUES (?)',
+          [Valeur]
+      );
+      console.log("Requête SQL exécutée avec succès :", result);
+
+      conn.release();
+      console.log("Connexion à la base de données libérée");
+
+      // Réponse de succès
+      res.status(201).json({ id: Number(result.insertId), Valeur });
+  } catch (error) {
+      console.error("Erreur dans POST /tableauvaleur :", error.message);
+      res.status(500).json({ error: 'Erreur lors de l\'ajout d\'une valeur' });
+  }
+});
+
+    app.get('/tableauvaleur', async (req, res) => {
+      try {
+          const conn = await pool.getConnection();
+          const result = await conn.query('SELECT * FROM tableauvaleur'); // Sélectionne toutes les valeurs
+          conn.release();
+          res.status(200).json(result); // Renvoie les résultats au format JSON
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Erreur lors de la récupération des valeurs' });
+      }
+  });
+  
+    
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
