@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une variable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #E5B8C7;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .logo {
+            width: 50px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
+        }
+
+        .form-container {
+            margin: 50px auto;
+            width: 50%;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #F5D6E0;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E5B8C7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.jpg" alt="H&J Logo" class="logo">
+    </header>
+    <div class="back-button" onclick="history.back()">← Retour</div>
+    <main>
+        <div class="form-container">
+            <h2>Ajouter une nouvelle variable</h2>
+            <form id="ajoutVariableForm">
+                <input type="text" id="Nom" placeholder="Nom" required>
+                <input type="text" id="IP" placeholder="Adresse IP" required>
+                <input type="text" id="Variable_automate" placeholder="Variable Automate" required>
+                <input type="number" id="Frequence" placeholder="Fréquence (ms)" required>
+                <input type="text" id="Unite" placeholder="Unité (e.g., Celsius)" required>
+                <input type="number" id="ID_Automate" placeholder="ID Automate" required>
+                <button type="button" onclick="addVariable()">Ajouter</button>
+            </form>
+        </div> 
+    </main>
+    <script>
+         async function addVariable() {
+            const Nom = document.getElementById('Nom').value;
+            const IP = document.getElementById('IP').value;
+            const Variable_automate = document.getElementById('Variable_automate').value;
+            const Frequence = parseInt(document.getElementById('Frequence').value, 10);
+            const Unite = document.getElementById('Unite').value;
+            const ID_Automate = parseInt(document.getElementById('ID_Automate').value, 10);
+
+            try {
+                const response = await fetch('http://localhost:3000/variable', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        Nom: Nom,
+                        IP: IP,
+                        Variable_automate: Variable_automate,
+                        Frequence: Frequence,
+                        Unite: Unite,
+                        ID_AUTOMATE: ID_Automate,
+                    }),
+                });
+
+                if (response.ok) {
+                    alert('Variable ajoutée avec succès!');
+                    document.getElementById('ajoutVariableForm').reset(); // Réinitialise le formulaire
+                } else {
+                    alert('Erreur lors de l\'ajout de la variable.');
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout de la variable:', error);
+                alert('Une erreur est survenue.');
+            }
+        }
+    </script>
+</body>
+</html>
