@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +13,8 @@
             padding: 0;
         }
 
+
+        /* Barre rose */
         header {
             display: flex;
             justify-content: space-between;
@@ -19,17 +23,72 @@
             padding: 10px 20px;
             position: sticky;
             top: 0;
+            z-index: 1000;
         }
 
+
+        /* Menu burger */
+        .burger-menu {
+            position: relative;
+        }
+
+
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
+
+        /* Logo */
         .logo {
+            position: absolute;
+            right: 20px;
             width: 50px;
             height: auto;
             cursor: pointer;
         }
 
+
+        /* Bouton retour */
         .back-button {
             position: absolute;
-            top: 15px;
+            top: 150px; /* Bouton déplacé plus bas */
             left: 15px;
             background-color: #F5D6E0;
             color: white;
@@ -42,20 +101,26 @@
             z-index: 1000;
         }
 
+
         .back-button:hover {
             background-color: #E5B8C7;
         }
 
+
+        /* Tableau */
         .table-container {
+            margin: 80px auto;
             width: 80%;
-            margin: auto;
-            margin-top: 20px;
+            text-align: center;
         }
+
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 30px;
         }
+
 
         th, td {
             padding: 10px;
@@ -63,10 +128,12 @@
             border: 1px solid #ddd;
         }
 
+
         th {
             background-color: #E5B8C7;
             color: white;
         }
+
 
         button {
             background-color: #F5D6E0;
@@ -77,9 +144,11 @@
             cursor: pointer;
         }
 
+
         button:hover {
             background-color: #E5B8C7;
         }
+
 
         .add-button {
             margin: 20px 0;
@@ -89,13 +158,20 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            display: block;
-            text-align: center;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
     <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+                <a href="main.html">Dashboard</a>
+            </div>
+        </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
     <div class="back-button" onclick="history.back()">← Retour</div>
@@ -129,10 +205,18 @@
         </div>
     </main>
     <script>
+        // Gestion du menu burger
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+
         function supprimerVariable(button) {
             const row = button.parentElement.parentElement;
             row.remove();
         }
+
 
         function modifierVariable(variable) {
             window.location.href = `modifconfig.html?variable=${variable}`;

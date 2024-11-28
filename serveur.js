@@ -7,6 +7,7 @@ const cors = require('cors'); // Importer le middleware CORS
 const app = express();
 const port = 3000;
 
+bigIntAsNumber: true,
 
 // Utiliser le middleware CORS
 app.use(cors());
@@ -66,7 +67,7 @@ const pool = mariadb.createPool({
           console.log("Connexion à la base de données libérée");
   
           // Réponse de succès
-          res.status(201).json({ id: result.insertId, Nom, IP, Variable_automate, Fréquence, Unité });
+          res.status(201).json({ id: Number(result.insertId), Nom, IP, Variable_automate, Fréquence, Unité });
       } catch (error) {
           console.error("Erreur dans POST /variable :", error.message, error.stack);
           res.status(500).json({ error: 'Erreur lors de l\'ajout d\'une variable' });

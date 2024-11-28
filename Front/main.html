@@ -12,6 +12,7 @@
             padding: 0;
         }
 
+
         /* Style pour le header */
         header {
             display: flex;
@@ -24,12 +25,14 @@
             z-index: 1000;
         }
 
+
         /* Style pour le logo */
         .logo {
             width: 50px;
             height: auto;
             cursor: pointer;
         }
+
 
         /* Style pour le menu burger */
         .burger-menu button {
@@ -43,11 +46,13 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+
         /* Effet hover sur le bouton burger */
         .burger-menu button:hover {
             background-color: #E5B8C7; /* Rose poudré plus foncé */
             color: white;
         }
+
 
         /* Style pour le menu déroulant */
         #burger-menu {
@@ -61,6 +66,7 @@
             z-index: 1000;
         }
 
+
         #burger-menu a {
             display: block;
             color: white;
@@ -68,9 +74,11 @@
             padding: 5px;
         }
 
+
         #burger-menu a:hover {
             background-color: #E5B8C7;
         }
+
 
         /* Centrer le contenu */
         main {
@@ -81,6 +89,7 @@
             height: 100vh; /* Utilise toute la hauteur de l'écran */
             text-align: center;
         }
+
 
         /* Style pour le graphique */
         .chart-container {
@@ -119,6 +128,7 @@
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
 
+
         // Initialisation de Chart.js
         const ctx = document.getElementById('myChart').getContext('2d');
         let myChart = new Chart(ctx, {
@@ -137,6 +147,7 @@
                 maintainAspectRatio: false
             }
         });
+
 
         // Gestion du changement de variable
         document.getElementById("variable-select").addEventListener("change", (e) => {

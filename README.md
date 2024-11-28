@@ -41,3 +41,5 @@ faire la différence entre le frotn et le back
 installer nodedemon --> https://www.npmjs.com/package/nodemon
     redémarrage de serveur après chaque changement 
     git push origin branchquetuveux  
+
+npm install modbus-serial
