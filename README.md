@@ -5,6 +5,7 @@ Avancé
 BDD 
     automate --> Post fonctionne
     variable --> Post fonctionne
+             --> on peut la voir sur historique
 
 
 

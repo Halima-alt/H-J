@@ -19,11 +19,11 @@
             padding: 10px 20px;
             position: sticky;
             top: 0;
+            z-index: 1000;
         }
 
         .burger-menu {
-            position: absolute;
-            left: 20px;
+            position: relative;
         }
 
         .burger-menu button {
@@ -34,6 +34,7 @@
             font-size: 1.2em;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .burger-menu button:hover {
@@ -45,7 +46,7 @@
             display: none;
             position: absolute;
             top: 50px;
-            left: 20px;
+            left: 0;
             background-color: #F5D6E0;
             border: 1px solid #E5B8C7;
             padding: 10px;
@@ -71,10 +72,28 @@
             cursor: pointer;
         }
 
+        .back-button {
+            position: absolute;
+            top: 150px;
+            left: 15px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
+        }
+
         .table-container {
             width: 80%;
-            margin: auto;
-            margin-top: 20px;
+            margin: 80px auto;
         }
 
         table {
@@ -115,42 +134,72 @@
             <div id="burger-menu">
                 <a href="config.html">Config</a>
                 <a href="historique.html">Historique</a>
-                <a href="main.html">Dashboard</a>
+                <a href="dashboard.html">Dashboard</a>
             </div>
         </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
+    <div class="back-button" onclick="history.back()">← Retour</div>
     <main>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>IP</th>
+                        <th>Variable_automate</th>
+                        <th>Fréquence</th>
+                        <th>Valeur</th>
                         <th>Date</th>
-                        <th>Action</th>
-                        <th>Détails</th>
+                        <th>Unité</th>
+                        <th>ID_AUTOMATE</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>2024-11-27</td>
-                        <td>Ajout</td>
-                        <td>Variable Température ajoutée</td>
-                    </tr>
-                    <tr>
-                        <td>2024-11-28</td>
-                        <td>Modification</td>
-                        <td>Variable Voyant modifiée</td>
-                    </tr>
+                <tbody id="historiqueTable">
+                    <!-- Historique ajouté ici dynamiquement -->
                 </tbody>
             </table>
         </div>
         <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
     </main>
     <script>
+        // Gestion du menu burger
         document.getElementById("burger-button").addEventListener("click", () => {
             const menu = document.getElementById("burger-menu");
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
+
+        // Exemple de données d'historique
+        const historiqueData = [
+            { id: 1, nom: "Variable1", ip: "192.168.1.1", automate: "Var1", freq: "50Hz", valeur: "12.5", date: "2024-11-15", unite: "°C", id_automate: "001" },
+            { id: 2, nom: "Variable2", ip: "192.168.1.2", automate: "Var2", freq: "60Hz", valeur: "15.0", date: "2024-11-16", unite: "°C", id_automate: "002" }
+        ];
+
+        // Afficher l'historique dans le tableau
+        const tableBody = document.getElementById("historiqueTable");
+
+        function displayHistorique(data) {
+            tableBody.innerHTML = "";
+            data.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.nom}</td>
+                    <td>${item.ip}</td>
+                    <td>${item.automate}</td>
+                    <td>${item.freq}</td>
+                    <td>${item.valeur}</td>
+                    <td>${item.date}</td>
+                    <td>${item.unite}</td>
+                    <td>${item.id_automate}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initial display
+        displayHistorique(historiqueData);
     </script>
 </body>
 </html>

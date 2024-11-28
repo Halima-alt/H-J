@@ -11,6 +11,7 @@
             padding: 0;
         }
 
+        /* Barre rose */
         header {
             display: flex;
             justify-content: space-between;
@@ -19,11 +20,12 @@
             padding: 10px 20px;
             position: sticky;
             top: 0;
+            z-index: 1000;
         }
 
+        /* Menu burger */
         .burger-menu {
-            position: absolute;
-            left: 20px;
+            position: relative;
         }
 
         .burger-menu button {
@@ -45,7 +47,7 @@
             display: none;
             position: absolute;
             top: 50px;
-            left: 20px;
+            left: 0;
             background-color: #F5D6E0;
             border: 1px solid #E5B8C7;
             padding: 10px;
@@ -63,6 +65,7 @@
             background-color: #E5B8C7;
         }
 
+        /* Logo */
         .logo {
             position: absolute;
             right: 20px;
@@ -71,15 +74,37 @@
             cursor: pointer;
         }
 
+        /* Bouton retour */
+        .back-button {
+            position: absolute;
+            top: 150px; /* Bouton déplacé plus bas */
+            left: 15px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
+        }
+
+        /* Tableau */
         .table-container {
+            margin: 80px auto;
             width: 80%;
-            margin: auto;
-            margin-top: 20px;
+            text-align: center;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 30px;
         }
 
         th, td {
@@ -114,8 +139,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            display: block;
-            text-align: center;
+            display: inline-block;
         }
     </style>
 </head>
@@ -131,6 +155,7 @@
         </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
+    <div class="back-button" onclick="history.back()">← Retour</div>
     <main>
         <div class="table-container">
             <table>
@@ -161,6 +186,7 @@
         </div>
     </main>
     <script>
+        // Gestion du menu burger
         document.getElementById("burger-button").addEventListener("click", () => {
             const menu = document.getElementById("burger-menu");
             menu.style.display = menu.style.display === "block" ? "none" : "block";
