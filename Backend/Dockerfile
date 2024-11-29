@@ -1,5 +1,5 @@
 # Utiliser une image officielle de Node.js
-FROM node:14
+FROM node:16
 
 # Définir le répertoire de travail à l'intérieur du conteneur
 WORKDIR /app
@@ -7,17 +7,14 @@ WORKDIR /app
 # Copier les fichiers package.json et package-lock.json pour installer les dépendances
 COPY package.json ./
 
-# Installer les dépendances globales nécessaires (comme nodemon)
+# Installer les dépendances globales
 RUN npm install -g nodemon
 
-# Installer les dépendances du projet
-RUN npm install
-
-# Copier tous les fichiers du projet dans le conteneur
+# Copier tout le code source dans le conteneur
 COPY . .
 
-# Exposer le port 5000 pour que Docker sache sur quel port fonctionne l'application
-EXPOSE 5000
+# Exposer le port 3000 pour l'application
+EXPOSE 3000
 
-# Démarrer l'application avec nodemon
-CMD ["nodemon", "app.js"]
+# Exécuter le script wait-for-it.sh pour attendre que la base de données soit prête avant de démarrer le backend
+CMD ["nodemon", "--legacy-watch", "serveur.js"]
