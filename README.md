@@ -54,4 +54,5 @@ donc connexion.js est capable de lire les data (en 8 bits)
     Données reçues : [ true,  false, false, false, false, false, false, false ]
     donc la on lit l'arret d'urgence et donc on peut coi que le 1er bit est true donc il est à 1
 
-    
+ajout de l'image docker donc il faut soit connecter mes données bdd soit il faut recommencer a créer les tables 
+on peut maintenant sur pc juliette avec connexion.js lancer les valeurs et les enregistrer dans bdd
