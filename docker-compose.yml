@@ -1,16 +1,22 @@
 services:
   frontend:
     image: nginx:latest
+    container_name: h-j-frontend
     ports:
       - "8080:80"
     volumes:
       - ./frontend:/usr/share/nginx/html
       - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - backend
     networks:
       - hackathon_network
 
   backend:
-    build: ./Backend
+    build: 
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: h-j-backend
     ports:
       - "3000:3000"
     depends_on:
@@ -19,10 +25,10 @@ services:
       - ./backend:/app
     networks:
       - hackathon_network
-    command: node connexion.js
 
   db:
     image: mariadb
+    container_name: h-j-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: deploiement

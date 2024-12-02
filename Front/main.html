@@ -134,10 +134,10 @@
         let myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                labels: [], // Labels pour le graphique
                 datasets: [{
-                    label: 'Température',
-                    data: [12, 19, 3, 5, 2],
+                    label: 'Valeurs',
+                    data: [], // Données pour le graphique
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
@@ -148,15 +148,36 @@
             }
         });
 
+        async function fetchData(variableId) {
+            try {
+                const response = await fetch(`http://localhost:3000/tableauvaleur?ID_Variable=${variableId}`);
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des données');
+                }
+                const data = await response.json();
+
+                // Transformez les données pour Chart.js
+                const labels = data.map((entry, index) => `Point ${index + 1}`);
+                const values = data.map(entry => entry.Valeur);
+
+                // Mettez à jour le graphique
+                myChart.data.labels = labels;
+                myChart.data.datasets[0].data = values;
+                myChart.update();
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données:', error.message);
+            }
+        }
+
 
         // Gestion du changement de variable
         document.getElementById("variable-select").addEventListener("change", (e) => {
-            const selectedVariable = e.target.value;
-            // Mise à jour des données du graphique
-            myChart.data.datasets[0].label = selectedVariable === "temp" ? "Température" : "Voyant";
-            myChart.data.datasets[0].data = selectedVariable === "temp" ? [12, 19, 3, 5, 2] : [7, 8, 6, 4, 3];
-            myChart.update();
+            const variableId = e.target.value;
+            fetchData(variableId); // Chargez les données pour la variable sélectionnée
         });
+
+        // Charger les données pour la variable par défaut (ex. Variable 1)
+        fetchData(1);
     </script>
 </body>
 </html>

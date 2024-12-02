@@ -183,8 +183,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Variable</th>
-                        <th>Action</th>
+                        
                     </tr>
                 </thead>
                 <tbody id="variablesTable">
@@ -209,20 +208,53 @@
     </main>
     <script>
         // Gestion du menu burger
-        document.getElementById("burger-button").addEventListener("click", () => {
-            const menu = document.getElementById("burger-menu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        document.addEventListener('DOMContentLoaded', () => {
+    fetchVariables();
+});
+
+async function fetchVariables() {
+    try {
+        // Faites une requête GET à l'API
+        const response = await fetch('http://localhost:3000/variable');
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        const variables = await response.json();
+
+        // Référence à l'élément tbody
+        const tableBody = document.getElementById('variablesTable');
+
+        // Nettoyez les anciennes lignes si nécessaires
+        tableBody.innerHTML = '';
+
+        // Ajoutez chaque variable comme une ligne du tableau
+        variables.forEach(variable => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${variable.Nom}</td>
+                <td>
+                    <button onclick="modifierVariable('${variable.Nom}')">Modifier</button>
+                    <button onclick="supprimerVariable(this)">Supprimer</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
         });
+    } catch (error) {
+        console.error("Erreur :", error.message);
+    }
+}
 
-        function supprimerVariable(button) {
-            const row = button.parentElement.parentElement;
-            row.remove();
-        }
+function supprimerVariable(button) {
+    const row = button.parentElement.parentElement;
+    row.remove();
+}
 
+function modifierVariable(variable) {
+    window.location.href = `modifconfig.html?variable=${variable}`;
+}
 
-        function modifierVariable(variable) {
-            window.location.href = `modifconfig.html?variable=${variable}`;
-        }
     </script>
 </body>
 </html>
