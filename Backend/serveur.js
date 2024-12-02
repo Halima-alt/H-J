@@ -91,7 +91,7 @@ app.post('/automate', async (req, res) => {
     }
 
     // Connexion à la base de données et insertion des données
-    const conn = await pool.getConnection();
+    const conn = await db.getConnection();
     const result = await conn.query('INSERT INTO automate (ID_AUTOMATE, Nom, IP, Type) VALUES (?, ?, ?, ?)',
       [ID_AUTOMATE, Nom, IP, Type]
     );
@@ -108,7 +108,7 @@ app.post('/automate', async (req, res) => {
 
 app.get('/automate', async (req, res) => {
   try {
-    const conn = await pool.getConnection();
+    const conn = await db.getConnection();
     const result = await conn.query('SELECT * FROM automate'); // Sélectionne toutes les maisons
     conn.release();
     res.status(200).json(result); // Renvoie les résultats au format JSON
@@ -131,7 +131,7 @@ if (Valeur === undefined) {
     return res.status(400).json({ error: 'Données invalides fournies' });
 }
 
-const conn = await pool.getConnection();
+const conn = await db.getConnection();
 console.log("Connexion à la base de données réussie");
 
 // Exécution de la requête SQL
@@ -154,7 +154,7 @@ res.status(500).json({ error: 'Erreur lors de l\'ajout d\'une valeur' });
 
 app.get('/tableauvaleur', async (req, res) => {
 try {
-    const conn = await pool.getConnection();
+    const conn = await db.getConnection();
     const result = await conn.query('SELECT * FROM tableauvaleur'); // Sélectionne toutes les valeurs
     conn.release();
     res.status(200).json(result); // Renvoie les résultats au format JSON
@@ -172,43 +172,43 @@ app.listen(port, () => {
 
 /////////////////////////////////////////////////////////////////////////
 
-// Connecter au TCP
-client.connectTCP("172.16.1.24", { port: 502 })
-    .then(() => {
-        console.log("Connexion TCP établie.");
-        client.setID(1); // Définir l'ID de l'unité
-    })
-    .catch((error) => {
-        console.error("Erreur lors de la connexion TCP :", error.message);
-    });
+// // Connecter au TCP
+// client.connectTCP("172.16.1.24", { port: 502 })
+//     .then(() => {
+//         console.log("Connexion TCP établie.");
+//         client.setID(1); // Définir l'ID de l'unité
+//     })
+//     .catch((error) => {
+//         console.error("Erreur lors de la connexion TCP :", error.message);
+//     });
 
-// Lire les valeurs toutes les 1000ms
-setInterval(async function () {
-    try {
-        const data = await client.readCoils(514, 1); // Lire 1 registre à partir de l'adresse 514
-        console.log("Données reçues :", data.data);
-        const valeur = data.data[0] ? 1 : 0;
-        console.log("Valeur interprétée :", valeur);
+// // Lire les valeurs toutes les 1000ms
+// setInterval(async function () {
+//     try {
+//         const data = await client.readCoils(514, 1); // Lire 1 registre à partir de l'adresse 514
+//         console.log("Données reçues :", data.data);
+//         const valeur = data.data[0] ? 1 : 0;
+//         console.log("Valeur interprétée :", valeur);
 
-        const sql = `
-            INSERT INTO tableauvaleur (Valeur, ID_Variable, automate_ID) 
-            VALUES (?, ?, ?)
-        `;
-        const values = [valeur, 1, 1]; // a changer en fonction de l'ID variabel que l'on cherche+ ID-automate
+//         const sql = `
+//             INSERT INTO tableauvaleur (Valeur, ID_Variable, automate_ID) 
+//             VALUES (?, ?, ?)
+//         `;
+//         const values = [valeur, 1, 1]; // a changer en fonction de l'ID variabel que l'on cherche+ ID-automate
 
-        // Exécuter la requête d'insertion
-        db.query(sql, values, (err, results) => {
-            if (err) {
-                console.error("Erreur lors de l'insertion dans la BDD :", err.message);
-            } else {
-                console.log("Données insérées avec succès. ID :", results.insertId);
-            }
-        });
+//         // Exécuter la requête d'insertion
+//         db.query(sql, values, (err, results) => {
+//             if (err) {
+//                 console.error("Erreur lors de l'insertion dans la BDD :", err.message);
+//             } else {
+//                 console.log("Données insérées avec succès. ID :", results.insertId);
+//             }
+//         });
 
-    } catch (error) {
-        console.error("Erreur lors de la lecture des données :", error.message);
-    }
-}, 1000);
+//     } catch (error) {
+//         console.error("Erreur lors de la lecture des données :", error.message);
+//     }
+// }, 1000);
 
 
 
