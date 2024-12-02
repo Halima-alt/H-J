@@ -10,8 +10,6 @@
             margin: 0;
             padding: 0;
         }
-
-
         header {
             display: flex;
             justify-content: space-between;
@@ -22,13 +20,9 @@
             top: 0;
             z-index: 1000;
         }
-
-
         .burger-menu {
             position: relative;
         }
-
-
         .burger-menu button {
             background-color: white;
             color: #F5D6E0;
@@ -39,13 +33,10 @@
             cursor: pointer;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
-
         .burger-menu button:hover {
             background-color: #E5B8C7;
             color: white;
         }
-
         #burger-menu {
             display: none;
             position: absolute;
@@ -56,18 +47,15 @@
             padding: 10px;
             z-index: 1000;
         }
-
         #burger-menu a {
             display: block;
             color: white;
             text-decoration: none;
             padding: 5px;
         }
-
         #burger-menu a:hover {
             background-color: #E5B8C7;
         }
-
         .logo {
             position: absolute;
             right: 20px;
@@ -75,8 +63,6 @@
             height: auto;
             cursor: pointer;
         }
-
-
         .back-button {
             position: absolute;
             top: 150px;
@@ -91,37 +77,26 @@
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
-
-
         .back-button:hover {
             background-color: #E5B8C7;
         }
-
-
         .table-container {
             width: 80%;
             margin: 80px auto;
         }
-
-
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
-
         th, td {
             padding: 10px;
             text-align: center;
             border: 1px solid #ddd;
         }
-
-
         th {
             background-color: #E5B8C7;
             color: white;
         }
-
         .export-button {
             margin-top: 20px;
             background-color: #F5D6E0;
@@ -131,8 +106,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-
         .export-button:hover {
             background-color: #E5B8C7;
         }
@@ -152,165 +125,220 @@
     </header>
     <div class="back-button" onclick="history.back()">← Retour</div>
     <main>
+        <div>
+            <input type="checkbox" id="extractAll" onclick="toggleDateInputs()" /> Extraire tout
+            <label for="startDate">Date de début :</label>
+            <input type="date" id="startDate" />
+            <label for="endDate">Date de fin :</label>
+            <input type="date" id="endDate" />
+        </div>
+        <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>IP</th>
-                        <th>Variable_automate</th>
+                        <th>ID Valeur</th>
+                        <th>Nom Variable</th>
+                        <th>Nom Automate</th>
                         <th>Fréquence</th>
                         <th>Valeur</th>
                         <th>Date</th>
                         <th>Unité</th>
-                        <th>ID_AUTOMATE</th>
                     </tr>
                 </thead>
-
                 <tbody id="historiqueTable">
                     <!-- Historique ajouté ici dynamiquement -->
-
-                <tbody>
-                    <tr>
-                        <td>2024-11-27</td>
-                        <td>Ajout</td>
-                        <td>Variable Température ajoutée</td>
-                    </tr>
-                    <tr>
-                        <td>2024-11-28</td>
-                        <td>Modification</td>
-                        <td>Variable Voyant modifiée</td>
-                    </tr>
-
                 </tbody>
             </table>
         </div>
-        <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
+        
     </main>
     <script>
 
-        // Gestion du menu burger
+        let historiqueData = [];
 
+        // Gestion du menu burger
         document.getElementById("burger-button").addEventListener("click", () => {
             const menu = document.getElementById("burger-menu");
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
 
+        async function fetchHistorique() {
+            try {
+                const response = await fetch('http://localhost:3000/historique'); // Endpoint modifié pour récupérer les données enrichies
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
 
-        // Exemple de données d'historique
-        const historiqueData = [
-            { id: 1, nom: "Variable1", ip: "192.168.1.1", automate: "Var1", freq: "50Hz", valeur: "12.5", date: "2024-11-15", unite: "°C", id_automate: "001" },
-            { id: 2, nom: "Variable2", ip: "192.168.1.2", automate: "Var2", freq: "60Hz", valeur: "15.0", date: "2024-11-16", unite: "°C", id_automate: "002" }
-        ];
+                const tableBody = document.getElementById('historiqueTable');
+                tableBody.innerHTML = '<tr><td colspan="7">Chargement des données...</td></tr>';
 
+                const data = await response.json();
 
-        // Afficher l'historique dans le tableau
-        const tableBody = document.getElementById("historiqueTable");
-
-
-        function displayHistorique(data) {
-            tableBody.innerHTML = "";
-            data.forEach(item => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>${item.nom}</td>
-                    <td>${item.ip}</td>
-                    <td>${item.automate}</td>
-                    <td>${item.freq}</td>
-                    <td>${item.valeur}</td>
-                    <td>${item.date}</td>
-                    <td>${item.unite}</td>
-                    <td>${item.id_automate}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-
-        // Fonction pour exporter les données filtrées en CSV
-        function exportFilteredCSV() {
-            const isExtractAll = document.getElementById("extractAll").checked;
-            let filteredData = historiqueData;
-
-            if (!isExtractAll) {
-                const startDate = document.getElementById("startDate").value;
-                const endDate = document.getElementById("endDate").value;
-
-                if (!startDate || !endDate) {
-                    alert("Veuillez sélectionner une plage de dates ou cocher 'Tout extraire' !");
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7">Aucune donnée disponible.</td></tr>';
                     return;
                 }
 
-                filteredData = historiqueData.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+                tableBody.innerHTML = ''; // Efface l'indicateur de chargement
+
+                // Ajoutez chaque élément au tableau
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.ID_Valeur}</td>
+                        <td>${item.Nom_Variable}</td>
+                        <td>${item.Nom_Automate}</td>
+                        <td>${item.Fréquence}</td>
+                        <td>${item.Valeur}</td>
+                        <td>${new Date(item.Date).toLocaleString()}</td>
+                        <td>${item.Unité}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données :', error);
+            }
+        }
+
+        function toggleDateInputs() {
+                const isChecked = document.getElementById("extractAll").checked;
+                document.getElementById("startDate").disabled = isChecked;
+                document.getElementById("endDate").disabled = isChecked;
+            }
+
+        function exportFilteredCSV() {
+                const isExtractAll = document.getElementById("extractAll").checked;
+                const tableRows = document.querySelectorAll("#historiqueTable tr"); // Récupère les lignes du tableau
+                let dataToExport = [];
+
+                if (tableRows.length === 0) {
+                    alert("Aucune donnée à exporter.");
+                    return;
+                }
+
+                if (!isExtractAll) {
+                    const startDate = document.getElementById("startDate").value;
+                    const endDate = document.getElementById("endDate").value;
+
+                    if (!startDate || !endDate) {
+                        alert("Veuillez sélectionner une plage de dates ou cocher 'Extraire tout'.");
+                        return;
+                    }
+
+                    // Filtrer les données affichées dans le tableau en fonction des dates
+                    tableRows.forEach(row => {
+                        const dateCell = row.querySelector("td:nth-child(6)"); // Supposons que la date est dans la 6e colonne
+                        if (dateCell) {
+                            const rowDate = new Date(dateCell.textContent.trim());
+                            const start = new Date(startDate);
+                            const end = new Date(endDate);
+
+                            if (rowDate >= start && rowDate <= end) {
+                                dataToExport.push(row);
+                            }
+                        }
+                    });
+
+                    if (dataToExport.length === 0) {
+                        alert("Aucune donnée trouvée pour la plage de dates sélectionnée.");
+                        return;
+                    }
+                } else {
+                    // Inclure toutes les données affichées dans le tableau
+                    dataToExport = Array.from(tableRows);
+                }
+
+                // Générer le contenu CSV
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "ID Valeur,Nom Variable,Nom Automate,Fréquence,Valeur,Date,Unité\n"; // En-têtes des colonnes
+
+                dataToExport.forEach(row => {
+                    const cells = row.querySelectorAll("td");
+                    const rowData = Array.from(cells).map(cell => `"${cell.textContent.trim()}"`).join(",");
+                    csvContent += rowData + "\n";
                 });
 
-                if (filteredData.length === 0) {
-                    alert("Aucune donnée trouvée pour la plage de dates sélectionnée !");
-                    return;
-                }
+                // Télécharger le fichier CSV
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `historique_${isExtractAll ? "complet" : "filtré"}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Date,Action,Détails\n"; // En-tête du fichier CSV
 
-            filteredData.forEach(item => {
-                csvContent += `${item.date},${item.action},${item.details}\n`;
-            });
+    //     // Fonction pour exporter les données filtrées en CSV
+    //      function exportFilteredCSV() {
+    //     if (!historiqueData || historiqueData.length === 0) {
+    //         alert("Aucune donnée à exporter !");
+    //         return;
+    //     }
 
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `historique_${isExtractAll ? "complet" : "filtré"}.csv`);
-            document.body.appendChild(link);
+    //     // Construire le contenu du CSV
+    //     let csvContent = "data:text/csv;charset=utf-8,";
+    //     csvContent += "ID Valeur,Nom Variable,Nom Automate,Fréquence,Valeur,Date,Unité\n"; // En-tête du CSV
 
-            link.click(); // Téléchargement du fichier CSV
-            document.body.removeChild(link);
-        }
+    //     historiqueData.forEach(item => {
+    //         csvContent += `${item.ID_Valeur},${item.Nom_Variable},${item.Nom_Automate},${item.Fréquence},${item.Valeur},${new Date(item.Date).toLocaleString()},${item.Unité}\n`;
+    //     });
 
-        async function fetchVariableAutomate() {
-          try {
-            const response = await fetch('http://localhost:3000/variable');
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
+    //     // Créer un lien de téléchargement
+    //     const encodedUri = encodeURI(csvContent);
+    //     const link = document.createElement("a");
+    //     link.setAttribute("href", encodedUri);
+    //     link.setAttribute("download", "historique.csv");
+    //     document.body.appendChild(link);
+
+    //     link.click(); // Téléchargement
+    //     document.body.removeChild(link); // Supprime le lien après téléchargement
+    // }
+
+
+    //     async function fetchVariableAutomate() {
+    //       try {
+    //         const response = await fetch('http://localhost:3000/variable');
+    //         if (!response.ok) {
+    //             throw new Error(`Erreur HTTP : ${response.status}`);
+    //         }
             
-            const HistoVar = document.getElementById('HistoVar');
-            HistoVar.innerHTML = '<tr><td colspan="8">Chargement des données...</td></tr>';
+    //         const HistoVar = document.getElementById('HistoVar');
+    //         HistoVar.innerHTML = '<tr><td colspan="8">Chargement des données...</td></tr>';
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            if (data.length === 0) {
-                HistoVar.innerHTML = '<tr><td colspan="8">Aucune donnée disponible.</td></tr>';
-                return;
-            }
+    //         if (data.length === 0) {
+    //             HistoVar.innerHTML = '<tr><td colspan="8">Aucune donnée disponible.</td></tr>';
+    //             return;
+    //         }
 
-            HistoVar.innerHTML = ''; // Efface l'indicateur de chargement
+    //         HistoVar.innerHTML = ''; // Efface l'indicateur de chargement
             
-            // Pour chaque éléments, on crée une ligne dans le tableau
-            data.forEach(histo => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${histo.ID_Variable}</td>
-                <td>${histo.Nom}</td>
-                <td>${histo.IP}</td>
-                <td>${histo.Variable_automate}</td>
-                <td>${histo.Fréquence}</td>
-                <td>${histo.Valeur}</td>
-                <td>${new Date(histo.Date).toLocaleString()}</td>
-                <td>${histo.Unité}</td>
-                <td>${histo.ID_AUTOMATE}</td>
-            `;
-            HistoVar.appendChild(row);
-            });
-        } catch (error) {
-            console.error('Erreur lors de la récupération des données:', error);
-        }
-    }
-    fetchVariableAutomate();
+    //         // Pour chaque éléments, on crée une ligne dans le tableau
+    //         data.forEach(histo => {
+    //         const row = document.createElement('tr');
+    //         row.innerHTML = `
+    //             <td>${histo.ID_Variable}</td>
+    //             <td>${histo.Nom}</td>
+    //             <td>${histo.IP}</td>
+    //             <td>${histo.Variable_automate}</td>
+    //             <td>${histo.Fréquence}</td>
+    //             <td>${histo.Valeur}</td>
+    //             <td>${new Date(histo.Date).toLocaleString()}</td>
+    //             <td>${histo.Unité}</td>
+    //             <td>${histo.ID_AUTOMATE}</td>
+    //         `;
+    //         HistoVar.appendChild(row);
+    //         });
+    //     } catch (error) {
+    //         console.error('Erreur lors de la récupération des données:', error);
+    //     }
+    // }
+    // fetchVariableAutomate();
+    // Appeler la fonction au chargement de la page
+    fetchHistorique();
 
     </script>
 </body>

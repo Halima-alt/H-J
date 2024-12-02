@@ -49,20 +49,20 @@ app.get('/', (req, res) => {
 // Routes pour l'API
 app.post('/variable', async (req, res) => {
   try {
-    const { Nom, IP, Variable_automate, Fréquence, Unité } = req.body;
+    const { Nom, IP, Variable_automate, Adresse_Mot, Fréquence, Unité } = req.body;
 
-    if (!Nom || !IP || !Variable_automate || Fréquence === undefined || !Unité) {
+    if (!Nom || !IP || !Variable_automate || !Adresse_Mot || Fréquence === undefined || !Unité) {
       return res.status(400).json({ error: 'Données invalides fournies.' });
     }
 
     const conn = await db.getConnection();
     const result = await conn.query(
-      'INSERT INTO variable (Nom, IP, Variable_automate, Fréquence, Unité) VALUES (?, ?, ?, ?, ?)',
-      [Nom, IP, Variable_automate, Fréquence, Unité]
+      'INSERT INTO variable (Nom, IP, Variable_automate, Adresse_Mot, Fréquence, Unité) VALUES (?, ?, ?, ?, ?, ?)',
+      [Nom, IP, Variable_automate, Adresse_Mot, Fréquence, Unité]
     );
     conn.release();
 
-    res.status(201).json({ id: Number(result.insertId), Nom, IP, Variable_automate, Fréquence, Unité });
+    res.status(201).json({ id: Number(result.insertId), Nom, IP, Variable_automate, Adresse_Mot, Fréquence, Unité });
   } catch (error) {
     console.error('Erreur dans POST /variable :', error);
     res.status(500).json({ error: "Erreur lors de l'ajout d'une variable" });
@@ -164,13 +164,60 @@ try {
 }
 });
 
+app.get('/automate/:id/variables', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const conn = await db.getConnection();
+    const result = await conn.query('SELECT * FROM variable WHERE ID_AUTOMATE = ?', [id]); // Filtre par ID_AUTOMATE
+    conn.release();
+
+    if (!result.length) {
+      return res.status(404).json({ error: 'Aucune variable trouvée pour cet automate.' });
+    }
+
+    res.status(200).json(result); // Renvoie les variables au format JSON
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des variables.' }); // Gestion des erreurs
+  }
+});
+
+app.get('/historique', async (req, res) => {
+  try {
+      const conn = await db.getConnection();
+
+      // Jointure entre les tables tableauvaleur, variable et automate
+      const result = await conn.query(`
+          SELECT 
+              t.ID_Valeur,
+              v.Nom AS Nom_Variable,
+              a.Nom AS Nom_Automate,
+              v.Fréquence,
+              t.Valeur,
+              t.Date,
+              v.Unité
+          FROM tableauvaleur t
+          INNER JOIN variable v ON t.ID_Variable = v.ID_Variable
+          INNER JOIN automate a ON v.ID_AUTOMATE = a.ID_AUTOMATE
+      `);
+
+      conn.release();
+      res.status(200).json(result); // Renvoie les résultats au format JSON
+  } catch (error) {
+      console.error('Erreur lors de la récupération des données historiques :', error);
+      res.status(500).json({ error: 'Erreur lors de la récupération des données historiques' });
+  }
+});
+
+
+
 
 //Lancement du serveur
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////// connexion et retour de 514(AU)
 
 // // Connecter au TCP
 // client.connectTCP("172.16.1.24", { port: 502 })
@@ -210,5 +257,47 @@ app.listen(port, () => {
 //     }
 // }, 1000);
 
+async function scheduleVariableTracking() { // fais le tour de toute les variables qu'on a 
+  try {
+    const conn = await db.getConnection();
 
+    // Récupérer toutes les variables avec leur fréquence
+    const variables = await conn.query("SELECT * FROM variable");
 
+    for (const variable of variables) {
+      const { ID_Variable, Nom, IP, Adresse_Mot, Fréquence, ID_AUTOMATE } = variable;
+
+      // Planifier un suivi en fonction de la fréquence
+      setInterval(async () => {
+        try {
+          // Connexion à l'automate
+          await client.connectTCP(IP, { port: 502 });
+          client.setID(1);
+
+          // Lire la valeur
+          const data = await client.readCoils(parseInt(Adresse_Mot), 1);
+          const valeur = data.data[0] ? 1 : 0;
+
+          console.log(`Valeur lue pour ${Nom} (Automate ${ID_AUTOMATE}): ${valeur}`);
+
+          // Insérer dans la table tableauvaleur
+          await conn.query(
+            "INSERT INTO tableauvaleur (Valeur, ID_Variable, automate_ID) VALUES (?, ?, ?)",
+            [valeur, ID_Variable, ID_AUTOMATE]
+          );
+
+          console.log(`Valeur insérée pour la variable ${Nom}.`);
+        } catch (error) {
+          console.error(`Erreur lors de la lecture de la variable ${Nom}:`, error.message);
+        }
+      }, Fréquence * 1000); // Fréquence en secondes
+    }
+
+    conn.release();
+  } catch (error) {
+    console.error("Erreur lors de la planification des suivis :", error.message);
+  }
+}
+
+// Démarrer la planification
+scheduleVariableTracking();
