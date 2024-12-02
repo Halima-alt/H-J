@@ -19,6 +19,7 @@ services:
       - ./backend:/app
     networks:
       - hackathon_network
+    command: node connexion.js
 
   db:
     image: mariadb
@@ -28,7 +29,9 @@ services:
     ports:
       - "3307:3306"
     volumes:
+      - ./BDD/new.sql:/docker-entrypoint-initdb.d/new.sql:ro
       - db_data:/var/lib/mysql
+    command: --init-file /docker-entrypoint-initdb.d/new.sql
     networks:
       - hackathon_network
 

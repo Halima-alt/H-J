@@ -4,6 +4,7 @@
     "express": "^4.21.1",
     "mariadb": "^3.4.0",
     "modbus-serial": "^8.0.17",
+    "mysql2": "^3.11.5",
     "node-wifi": "^2.0.16"
   },
   "name": "h-j",
