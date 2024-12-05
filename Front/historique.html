@@ -11,6 +11,7 @@
             padding: 0;
         }
 
+        /* Barre rose */
         header {
             display: flex;
             justify-content: space-between;
@@ -22,14 +23,68 @@
             z-index: 1000;
         }
 
+        /* Menu burger */
+        .burger-menu {
+            position: relative;
+        }
+
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
+        /* Logo */
+        .logo {
+            position: absolute;
+            right: 20px;
+            width: 50px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        /* Tableau */
         .table-container {
-            width: 80%;
             margin: 80px auto;
+            width: 80%;
+            text-align: center;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 30px;
         }
 
         th, td {
@@ -43,20 +98,8 @@
             color: white;
         }
 
-        .filter-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px auto;
-            width: 80%;
-        }
-
-        .filter-container input, .filter-container label {
-            padding: 5px;
-            margin-right: 10px;
-        }
-
         .export-button {
+            margin-top: 20px;
             background-color: #F5D6E0;
             color: white;
             padding: 10px 20px;
@@ -68,29 +111,53 @@
         .export-button:hover {
             background-color: #E5B8C7;
         }
+
+        /* Bouton retour */
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Historique</h1>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+                <a href="main.html">Dashboard</a>
+            </div>
+        </div>
+        <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
-    <div class="filter-container">
-        <div>
-            <label for="startDate">Date début :</label>
-            <input type="date" id="startDate" disabled>
-        </div>
-        <div>
-            <label for="endDate">Date fin :</label>
-            <input type="date" id="endDate" disabled>
-        </div>
-        <div>
-            <input type="checkbox" id="exportAll" checked>
-            <label for="exportAll">Exporter tout</label>
-        </div>
-        <button class="export-button" onclick="exportFilteredData()">Exporter</button>
-    </div>
     <main>
         <div class="table-container">
+            <h1>Historique</h1>
+            <div>
+                <label for="start-date">Date début :</label>
+                <input type="date" id="start-date">
+                <label for="end-date">Date fin :</label>
+                <input type="date" id="end-date">
+                <label for="export-all">
+                    <input type="checkbox" id="export-all"> Exporter tout
+                </label>
+                <button class="export-button" onclick="exportData()">Exporter</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -106,89 +173,67 @@
                     </tr>
                 </thead>
                 <tbody id="historiqueTable">
-                    <!-- Historique ajouté ici dynamiquement -->
+                    <!-- Données ajoutées dynamiquement -->
                 </tbody>
             </table>
         </div>
     </main>
+
+    <!-- Bouton Retour -->
+    <button class="back-button" onclick="history.back()">← Retour</button>
+
     <script>
-        const historiqueData = [
-            { id: 1, nom: "Variable1", ip: "192.168.1.1", automate: "Var1", freq: "50Hz", valeur: "12.5", date: "2024-11-15", unite: "°C", id_automate: "001" },
-            { id: 2, nom: "Variable2", ip: "192.168.1.2", automate: "Var2", freq: "60Hz", valeur: "15.0", date: "2024-11-16", unite: "°C", id_automate: "002" }
-        ];
+        // Gestion du menu burger
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
 
-        function displayHistorique(data) {
-            const tableBody = document.getElementById("historiqueTable");
-            tableBody.innerHTML = "";
-
-            data.forEach(item => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>${item.nom}</td>
-                    <td>${item.ip}</td>
-                    <td>${item.automate}</td>
-                    <td>${item.freq}</td>
-                    <td>${item.valeur}</td>
-                    <td>${item.date}</td>
-                    <td>${item.unite}</td>
-                    <td>${item.id_automate}</td>
-                `;
-                tableBody.appendChild(row);
-            });
+        async function fetchHistorique() {
+            try {
+                const response = await fetch('http://localhost:3000/historique');
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+                const data = await response.json();
+                const tableBody = document.getElementById("historiqueTable");
+                tableBody.innerHTML = '';
+                data.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.id}</td>
+                        <td>${item.nom}</td>
+                        <td>${item.ip}</td>
+                        <td>${item.automate}</td>
+                        <td>${item.freq}</td>
+                        <td>${item.valeur}</td>
+                        <td>${item.date}</td>
+                        <td>${item.unite}</td>
+                        <td>${item.id_automate}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Erreur :", error.message);
+            }
         }
 
-        function filterDataByDate(startDate, endDate) {
-            return historiqueData.filter(item => {
-                const itemDate = new Date(item.date);
-                return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
-            });
-        }
-
-        function exportFilteredData() {
-            const exportAll = document.getElementById("exportAll").checked;
-
-            let filteredData;
+        function exportData() {
+            const exportAll = document.getElementById("export-all").checked;
             if (exportAll) {
-                filteredData = historiqueData;
+                alert("Exportation de toutes les données...");
             } else {
-                const startDate = document.getElementById("startDate").value;
-                const endDate = document.getElementById("endDate").value;
-
+                const startDate = document.getElementById("start-date").value;
+                const endDate = document.getElementById("end-date").value;
                 if (!startDate || !endDate) {
                     alert("Veuillez sélectionner une plage de dates.");
                     return;
                 }
-
-                filteredData = filterDataByDate(startDate, endDate);
-
-                if (filteredData.length === 0) {
-                    alert("Aucune donnée disponible pour cette plage de dates.");
-                    return;
-                }
+                alert(`Exportation des données du ${startDate} au ${endDate}...`);
             }
-
-            let csvContent = "data:text/csv;charset=utf-8,ID,Nom,IP,Variable_automate,Fréquence,Valeur,Date,Unité,ID_AUTOMATE\n";
-            filteredData.forEach(item => {
-                csvContent += `${item.id},${item.nom},${item.ip},${item.automate},${item.freq},${item.valeur},${item.date},${item.unite},${item.id_automate}\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", exportAll ? "historique_complet.csv" : "historique_filtre.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
 
-        document.getElementById("exportAll").addEventListener("change", (e) => {
-            const isChecked = e.target.checked;
-            document.getElementById("startDate").disabled = isChecked;
-            document.getElementById("endDate").disabled = isChecked;
-        });
-
-        displayHistorique(historiqueData); // Affichage initial
+        fetchHistorique();
     </script>
 </body>
 </html>
