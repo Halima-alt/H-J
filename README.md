@@ -56,3 +56,14 @@ donc connexion.js est capable de lire les data (en 8 bits)
 
 ajout de l'image docker donc il faut soit connecter mes données bdd soit il faut recommencer a créer les tables 
 on peut maintenant sur pc juliette avec connexion.js lancer les valeurs et les enregistrer dans bdd
+
+
+
+
+* faut faire crone pour choisir la fréuqenc des valeurs
+* traquer les valeurs (en mode boolean) de celle qui sont alumé/étinte et les affiché /trquaer que les true/false  --> pon fait tout tourner en meme temps et as de soucis 
+* avoir un dashboard où on affiche les variable qui tourne 
+* mettre en place le lancement de du traquage de chaque données 
+* trouver où ùettre crone 
+    trouver fréqunce dans bdd variable transforme en crone *** et ensuitre le faire tourner 
+
