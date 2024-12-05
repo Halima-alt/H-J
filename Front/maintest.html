@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page avec Automate1</title>
+    <style>
+        /* Styles globaux */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #E5B8C7;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .burger-menu {
+            position: relative;
+        }
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+        .logo {
+            width: 50px;
+            height: auto;
+            cursor: pointer;
+        }
+        /* Conteneur principal */
+        .main-content {
+            display: flex;
+            align-items: flex-start;
+        }
+        /* Menu Automate1 */
+        #automate1 {
+            position: fixed;
+            top: 80px;
+            left: 10px;
+            width: 200px; /* Taille réduite */
+            background-color: #4A4A6A;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em; /* Taille du texte réduite */
+        }
+        #automate1 h3 {
+            margin-bottom: 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #3A3A5A;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 1em; /* Taille ajustée */
+        }
+        #automate1 ul {
+            list-style: none;
+            padding: 0;
+            display: none; /* Masqué par défaut */
+        }
+        #automate1 li {
+            padding: 5px 0; /* Espacement réduit */
+            border-bottom: 1px solid #fff;
+        }
+        #automate1 li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+        </div>
+        <img src="logo.jpg" alt="H&J Logo" class="logo">
+    </header>
+    
+    <!-- Menu Automate1 -->
+    <div id="automate1">
+        <h3 id="automate1-toggle">Automate1</h3>
+        <ul id="variables-list">
+            <!-- Les variables sont chargées ici -->
+        </ul>
+    </div>
+
+    <script>
+        // Gestion du menu burger
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Variables Automate1 (exemple statique)
+        const variables = [
+            "AU",
+            "Cm_auto",
+            "Cm_manu",
+            "Cm_dist",
+            "Bp_dcy",
+            "Bp_arrcy",
+            "Bp_testl",
+            "Bp_acq",
+            "Bp_mct",
+            "Bp_act"
+        ];
+
+        // Charger les variables dans le menu Automate1
+        function loadVariables() {
+            const variablesList = document.getElementById("variables-list");
+            variablesList.innerHTML = "";
+            variables.forEach(variable => {
+                const li = document.createElement("li");
+                li.textContent = variable;
+                variablesList.appendChild(li);
+            });
+        }
+
+        // Basculer l'affichage des variables lorsqu'on clique sur Automate1
+        document.getElementById("automate1-toggle").addEventListener("click", () => {
+            const variablesList = document.getElementById("variables-list");
+            variablesList.style.display = variablesList.style.display === "block" ? "none" : "block";
+        });
+
+        // Charger les variables au démarrage
+        window.onload = () => {
+            loadVariables();
+        };
+    </script>
+</body>
+</html>
+-
