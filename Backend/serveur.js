@@ -290,7 +290,7 @@ async function scheduleVariableTracking() { // fais le tour de toute les variabl
         } catch (error) {
           console.error(`Erreur lors de la lecture de la variable ${Nom}:`, error.message);
         }
-      }, Fréquence * 1000); // Fréquence en secondes
+      }, Fréquence * 10000); // Fréquence en secondes
     }
 
     conn.release();
