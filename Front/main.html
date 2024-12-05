@@ -114,8 +114,7 @@
     <main>
         <h1>Choisissez une variable :</h1>
         <select id="variable-select">
-            <option value="temp">Température</option>
-            <option value="voyant">Voyant</option>
+            
         </select>
         <div class="chart-container">
             <canvas id="myChart"></canvas>
@@ -129,53 +128,99 @@
         });
 
 
-        // Initialisation de Chart.js
-        const ctx = document.getElementById('myChart').getContext('2d');
-        let myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [], // Labels pour le graphique
-                datasets: [{
-                    label: 'Valeurs',
-                    data: [], // Données pour le graphique
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
 
-        async function fetchData(variableId) {
+        // Fonction pour charger les variables dans le menu déroulant
+        async function loadVariables() {
             try {
-                const response = await fetch(`http://localhost:3000/tableauvaleur?ID_Variable=${variableId}`);
+                const response = await fetch('http://localhost:3000/variable');
                 if (!response.ok) {
-                    throw new Error('Erreur lors de la récupération des données');
+                    throw new Error('Erreur lors de la récupération des variables');
                 }
-                const data = await response.json();
 
-                // Transformez les données pour Chart.js
-                const labels = data.map((entry, index) => `Point ${index + 1}`);
-                const values = data.map(entry => entry.Valeur);
+                const variables = await response.json();
+                console.log("Variables reçues :", variables); // Vérifie les données reçues
 
-                // Mettez à jour le graphique
-                myChart.data.labels = labels;
-                myChart.data.datasets[0].data = values;
-                myChart.update();
+                const select = document.getElementById("variable-select");
+                select.innerHTML = ""; // Vide les options existantes
+
+                if (variables.length === 0) {
+                    const option = document.createElement("option");
+                    option.value = "";
+                    option.textContent = "Aucune variable disponible";
+                    select.appendChild(option);
+                    return;
+                }
+
+                // Ajoute chaque variable comme option
+                variables.forEach(variable => {
+                    const option = document.createElement("option");
+                    // Assurez-vous que les clés utilisées ici correspondent à la réponse JSON
+                    option.value = variable.ID_Variable;
+                    option.textContent = variable.Nom_Variable;
+                    select.appendChild(option);
+                });
+
+                // Charge les données pour la première variable par défaut
+                fetchData(variables[0].ID_Variable);
             } catch (error) {
-                console.error('Erreur lors de la récupération des données:', error.message);
+                console.error('Erreur lors de la récupération des variables:', error.message);
             }
         }
 
 
-        // Gestion du changement de variable
-        document.getElementById("variable-select").addEventListener("change", (e) => {
-            const variableId = e.target.value;
-            fetchData(variableId); // Chargez les données pour la variable sélectionnée
-        });
+    // Appelle la fonction loadVariables au chargement de la page
+    document.addEventListener("DOMContentLoaded", loadVariables);
 
+    // Appelle la fonction loadVariables au chargement de la page
+    document.addEventListener("DOMContentLoaded", loadVariables);
+
+    // Gestion du changement de variable
+    document.getElementById("variable-select").addEventListener("change", (e) => {
+        const variableId = e.target.value;
+        fetchData(variableId); // Charge les données pour la variable sélectionnée
+    });
+
+    // Fonction pour récupérer les données et mettre à jour le graphique
+    async function fetchData(variableId) {
+        try {
+            const response = await fetch(`http://localhost:3000/tableauvaleur?ID_Variable=${variableId}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération des données');
+            }
+            const data = await response.json();
+
+            // Transformez les données pour Chart.js
+            const labels = data.map((entry, index) => `Point ${index + 1}`);
+            const values = data.map(entry => entry.Valeur);
+
+            // Mettez à jour le graphique
+            myChart.data.labels = labels;
+            myChart.data.datasets[0].data = values;
+            myChart.update();
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données:', error.message);
+        }
+    }
+
+    // Initialisation de Chart.js
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [], // Labels pour le graphique
+            datasets: [{
+                label: 'Valeurs',
+                data: [], // Données pour le graphique
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+       
         // Charger les données pour la variable par défaut (ex. Variable 1)
         fetchData(1);
     </script>

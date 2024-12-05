@@ -53,11 +53,19 @@ CREATE TABLE `variable` (
     CONSTRAINT `ID_AUTOMATE` FOREIGN KEY (`ID_AUTOMATE`) REFERENCES `automate` (`ID_AUTOMATE`) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+ALTER TABLE variable
+ADD COLUMN Adresse_Mot VARCHAR(50) NOT NULL DEFAULT '0' AFTER Variable_automate;
+
+ALTER TABLE tableauvaleur ADD COLUMN Date DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+
 INSERT INTO `automate` (`ID_AUTOMATE`, `Nom`, `IP`, `Type`) VALUES
     (1, 'Automate A', '192.168.1.1', 'Type1');
 
-INSERT INTO `variable` (`ID_Variable`, `Nom`, `IP`, `Variable_automate`, `Fréquence`, `Date`, `Unité`, `ID_AUTOMATE`) VALUES
+INSERT INTO `variable` (`ID_Variable`, `Nom`, `IP`, `Variable_automate`, `Adresse_Mot`, `Fréquence`, `Date`, `Unité`, `ID_AUTOMATE`) VALUES
     (1, 'Capteur_Temperature', '192.168.1.10', 'Température', 60, '2024-11-27 08:40:30', 'Celsius', 1);
+
+
 
 INSERT INTO `tableauvaleur` (`ID_Valeur`, `Valeur`, `ID_Variable`, `automate_ID`) VALUES
     (1, 100, 1, 1),

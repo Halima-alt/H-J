@@ -10,8 +10,6 @@
             margin: 0;
             padding: 0;
         }
-
-        /* Barre rose */
         header {
             display: flex;
             justify-content: space-between;
@@ -22,12 +20,9 @@
             top: 0;
             z-index: 1000;
         }
-
-        /* Menu burger */
         .burger-menu {
             position: relative;
         }
-
         .burger-menu button {
             background-color: white;
             color: #F5D6E0;
@@ -37,12 +32,10 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         .burger-menu button:hover {
             background-color: #E5B8C7;
             color: white;
         }
-
         #burger-menu {
             display: none;
             position: absolute;
@@ -53,19 +46,15 @@
             padding: 10px;
             z-index: 1000;
         }
-
         #burger-menu a {
             display: block;
             color: white;
             text-decoration: none;
             padding: 5px;
         }
-
         #burger-menu a:hover {
             background-color: #E5B8C7;
         }
-
-        /* Logo */
         .logo {
             position: absolute;
             right: 20px;
@@ -73,31 +62,42 @@
             height: auto;
             cursor: pointer;
         }
-
-        /* Tableau */
+        .back-button {
+            position: absolute;
+            top: 150px;
+            left: 15px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .back-button:hover {
+            background-color: #E5B8C7;
+        }
         .table-container {
             margin: 80px auto;
             width: 80%;
             text-align: center;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 30px;
         }
-
         th, td {
             padding: 10px;
             text-align: center;
             border: 1px solid #ddd;
         }
-
         th {
             background-color: #E5B8C7;
             color: white;
         }
-
         .export-button {
             margin-top: 20px;
             background-color: #F5D6E0;
@@ -107,7 +107,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         .export-button:hover {
             background-color: #E5B8C7;
         }
@@ -146,6 +145,14 @@
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
     <main>
+        <div>
+            <input type="checkbox" id="extractAll" onclick="toggleDateInputs()" /> Extraire tout
+            <label for="startDate">Date de début :</label>
+            <input type="date" id="startDate" />
+            <label for="endDate">Date de fin :</label>
+            <input type="date" id="endDate" />
+        </div>
+        <button class="export-button" onclick="alert('Exportation des données')">Exporter</button>
         <div class="table-container">
             <h1>Historique</h1>
             <div>
@@ -161,15 +168,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>IP</th>
-                        <th>Variable_automate</th>
+                        <th>ID Valeur</th>
+                        <th>Nom Variable</th>
+                        <th>Nom Automate</th>
                         <th>Fréquence</th>
                         <th>Valeur</th>
                         <th>Date</th>
                         <th>Unité</th>
-                        <th>ID_AUTOMATE</th>
                     </tr>
                 </thead>
                 <tbody id="historiqueTable">
@@ -183,6 +188,9 @@
     <button class="back-button" onclick="history.back()">← Retour</button>
 
     <script>
+
+        let historiqueData = [];
+
         // Gestion du menu burger
         document.getElementById("burger-button").addEventListener("click", () => {
             const menu = document.getElementById("burger-menu");
@@ -191,49 +199,185 @@
 
         async function fetchHistorique() {
             try {
-                const response = await fetch('http://localhost:3000/historique');
+                const response = await fetch('http://localhost:3000/historique'); // Endpoint modifié pour récupérer les données enrichies
                 if (!response.ok) {
                     throw new Error(`Erreur HTTP : ${response.status}`);
                 }
+
+                const tableBody = document.getElementById('historiqueTable');
+                tableBody.innerHTML = '<tr><td colspan="7">Chargement des données...</td></tr>';
+
                 const data = await response.json();
-                const tableBody = document.getElementById("historiqueTable");
-                tableBody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7">Aucune donnée disponible.</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = ''; // Efface l'indicateur de chargement
+
+                // Ajoutez chaque élément au tableau
                 data.forEach(item => {
-                    const row = document.createElement("tr");
+                    const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${item.id}</td>
-                        <td>${item.nom}</td>
-                        <td>${item.ip}</td>
-                        <td>${item.automate}</td>
-                        <td>${item.freq}</td>
-                        <td>${item.valeur}</td>
-                        <td>${item.date}</td>
-                        <td>${item.unite}</td>
-                        <td>${item.id_automate}</td>
+                        <td>${item.ID_Valeur}</td>
+                        <td>${item.Nom_Variable}</td>
+                        <td>${item.Nom_Automate}</td>
+                        <td>${item.Fréquence}</td>
+                        <td>${item.Valeur}</td>
+                        <td>${new Date(item.Date).toLocaleString()}</td>
+                        <td>${item.Unité}</td>
                     `;
                     tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données :', error);
+            }
+        }
+
+        function toggleDateInputs() {
+                const isChecked = document.getElementById("extractAll").checked;
+                document.getElementById("startDate").disabled = isChecked;
+                document.getElementById("endDate").disabled = isChecked;
+            }
+
+        function exportFilteredCSV() {
+                const isExtractAll = document.getElementById("extractAll").checked;
+                const tableRows = document.querySelectorAll("#historiqueTable tr"); // Récupère les lignes du tableau
+                let dataToExport = [];
+
+                if (tableRows.length === 0) {
+                    alert("Aucune donnée à exporter.");
+                    return;
+                }
+
+                if (!isExtractAll) {
+                    const startDate = document.getElementById("startDate").value;
+                    const endDate = document.getElementById("endDate").value;
+
+                    if (!startDate || !endDate) {
+                        alert("Veuillez sélectionner une plage de dates ou cocher 'Extraire tout'.");
+                        return;
+                    }
+
+                    // Filtrer les données affichées dans le tableau en fonction des dates
+                    tableRows.forEach(row => {
+                        const dateCell = row.querySelector("td:nth-child(6)"); // Supposons que la date est dans la 6e colonne
+                        if (dateCell) {
+                            const rowDate = new Date(dateCell.textContent.trim());
+                            const start = new Date(startDate);
+                            const end = new Date(endDate);
+
+                            if (rowDate >= start && rowDate <= end) {
+                                dataToExport.push(row);
+                            }
+                        }
+                    });
+
+                    if (dataToExport.length === 0) {
+                        alert("Aucune donnée trouvée pour la plage de dates sélectionnée.");
+                        return;
+                    }
+                } else {
+                    // Inclure toutes les données affichées dans le tableau
+                    dataToExport = Array.from(tableRows);
+                }
+
+                // Générer le contenu CSV
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "ID Valeur,Nom Variable,Nom Automate,Fréquence,Valeur,Date,Unité\n"; // En-têtes des colonnes
+
+                dataToExport.forEach(row => {
+                    const cells = row.querySelectorAll("td");
+                    const rowData = Array.from(cells).map(cell => `"${cell.textContent.trim()}"`).join(",");
+                    csvContent += rowData + "\n";
                 });
             } catch (error) {
                 console.error("Erreur :", error.message);
             }
         }
 
-        function exportData() {
-            const exportAll = document.getElementById("export-all").checked;
-            if (exportAll) {
-                alert("Exportation de toutes les données...");
-            } else {
-                const startDate = document.getElementById("start-date").value;
-                const endDate = document.getElementById("end-date").value;
-                if (!startDate || !endDate) {
-                    alert("Veuillez sélectionner une plage de dates.");
-                    return;
-                }
-                alert(`Exportation des données du ${startDate} au ${endDate}...`);
+                // Télécharger le fichier CSV
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `historique_${isExtractAll ? "complet" : "filtré"}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
-        }
 
-        fetchHistorique();
+
+    //     // Fonction pour exporter les données filtrées en CSV
+    //      function exportFilteredCSV() {
+    //     if (!historiqueData || historiqueData.length === 0) {
+    //         alert("Aucune donnée à exporter !");
+    //         return;
+    //     }
+
+    //     // Construire le contenu du CSV
+    //     let csvContent = "data:text/csv;charset=utf-8,";
+    //     csvContent += "ID Valeur,Nom Variable,Nom Automate,Fréquence,Valeur,Date,Unité\n"; // En-tête du CSV
+
+    //     historiqueData.forEach(item => {
+    //         csvContent += `${item.ID_Valeur},${item.Nom_Variable},${item.Nom_Automate},${item.Fréquence},${item.Valeur},${new Date(item.Date).toLocaleString()},${item.Unité}\n`;
+    //     });
+
+    //     // Créer un lien de téléchargement
+    //     const encodedUri = encodeURI(csvContent);
+    //     const link = document.createElement("a");
+    //     link.setAttribute("href", encodedUri);
+    //     link.setAttribute("download", "historique.csv");
+    //     document.body.appendChild(link);
+
+    //     link.click(); // Téléchargement
+    //     document.body.removeChild(link); // Supprime le lien après téléchargement
+    // }
+
+
+    //     async function fetchVariableAutomate() {
+    //       try {
+    //         const response = await fetch('http://localhost:3000/variable');
+    //         if (!response.ok) {
+    //             throw new Error(`Erreur HTTP : ${response.status}`);
+    //         }
+            
+    //         const HistoVar = document.getElementById('HistoVar');
+    //         HistoVar.innerHTML = '<tr><td colspan="8">Chargement des données...</td></tr>';
+
+    //         const data = await response.json();
+
+    //         if (data.length === 0) {
+    //             HistoVar.innerHTML = '<tr><td colspan="8">Aucune donnée disponible.</td></tr>';
+    //             return;
+    //         }
+
+    //         HistoVar.innerHTML = ''; // Efface l'indicateur de chargement
+            
+    //         // Pour chaque éléments, on crée une ligne dans le tableau
+    //         data.forEach(histo => {
+    //         const row = document.createElement('tr');
+    //         row.innerHTML = `
+    //             <td>${histo.ID_Variable}</td>
+    //             <td>${histo.Nom}</td>
+    //             <td>${histo.IP}</td>
+    //             <td>${histo.Variable_automate}</td>
+    //             <td>${histo.Fréquence}</td>
+    //             <td>${histo.Valeur}</td>
+    //             <td>${new Date(histo.Date).toLocaleString()}</td>
+    //             <td>${histo.Unité}</td>
+    //             <td>${histo.ID_AUTOMATE}</td>
+    //         `;
+    //         HistoVar.appendChild(row);
+    //         });
+    //     } catch (error) {
+    //         console.error('Erreur lors de la récupération des données:', error);
+    //     }
+    // }
+    // fetchVariableAutomate();
+    // Appeler la fonction au chargement de la page
+    fetchHistorique();
+
     </script>
 </body>
 </html>
