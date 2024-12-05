@@ -11,7 +11,6 @@
             padding: 0;
         }
 
-
         header {
             display: flex;
             justify-content: space-between;
@@ -22,13 +21,11 @@
             top: 0;
         }
 
-
         .logo {
             width: 50px;
             height: auto;
             cursor: pointer;
         }
-
 
         .back-button {
             position: absolute;
@@ -45,11 +42,9 @@
             z-index: 1000;
         }
 
-
         .back-button:hover {
             background-color: #E5B8C7;
         }
-
 
         .form-container {
             margin: 50px auto;
@@ -57,13 +52,12 @@
             text-align: center;
         }
 
-
-        input[type="text"] {
+        input[type="text"],
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
         }
-
 
         button {
             background-color: #F5D6E0;
@@ -73,7 +67,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
 
         button:hover {
             background-color: #E5B8C7;
@@ -88,18 +81,58 @@
     <main>
         <div class="form-container">
             <form id="ajoutForm">
-                <input type="text" id="newVariable" placeholder="Nom de la variable" required>
+                <input type="text" id="Nom" placeholder="Nom de la variable" required>
+                <input type="text" id="IP" placeholder="Adresse IP" required>
+                <input type="text" id="Variable_automate" placeholder="Variable automate" required>
+                <input type="text" id="Adresse_Mot" placeholder="Adresse mot" required>
+                <input type="number" id="Fréquence" placeholder="Fréquence (en ms)" required>
+                <input type="text" id="Unité" placeholder="Unité" required>
                 <button type="submit">Ajouter</button>
             </form>
         </div>
     </main>
     <script>
-        document.getElementById("ajoutForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const newVariable = document.getElementById("newVariable").value;
+        document.getElementById("ajoutForm").addEventListener("submit", async (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
 
+            // Récupère les données du formulaire
+            const Nom = document.getElementById("Nom").value;
+            const IP = document.getElementById("IP").value;
+            const Variable_automate = document.getElementById("Variable_automate").value;
+            const Adresse_Mot = document.getElementById("Adresse_Mot").value;
+            const Fréquence = document.getElementById("Fréquence").value;
+            const Unité = document.getElementById("Unité").value;
 
-            window.location.href = `config.html?newVariable=${newVariable}`;
+            try {
+                // Envoie une requête POST au serveur
+                const response = await fetch('http://localhost:3000/variable', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        Nom,
+                        IP,
+                        Variable_automate,
+                        Adresse_Mot,
+                        Fréquence,
+                        Unité,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(`Erreur : ${errorData.error}`);
+                    return;
+                }
+
+                const result = await response.json();
+                alert(`Variable ajoutée avec succès : ID ${result.id}, Nom ${result.Nom}`);
+                document.getElementById("ajoutForm").reset(); // Réinitialise le formulaire
+            } catch (error) {
+                console.error('Erreur lors de la requête POST :', error);
+                alert("Erreur lors de l'ajout de la variable.");
+            }
         });
     </script>
 </body>
