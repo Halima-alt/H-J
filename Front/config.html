@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +11,6 @@
             padding: 0;
         }
 
-
         /* Barre rose */
         header {
             display: flex;
@@ -26,12 +23,10 @@
             z-index: 1000;
         }
 
-
         /* Menu burger */
         .burger-menu {
             position: relative;
         }
-
 
         .burger-menu button {
             background-color: white;
@@ -43,12 +38,10 @@
             cursor: pointer;
         }
 
-
         .burger-menu button:hover {
             background-color: #E5B8C7;
             color: white;
         }
-
 
         #burger-menu {
             display: none;
@@ -61,7 +54,6 @@
             z-index: 1000;
         }
 
-
         #burger-menu a {
             display: block;
             color: white;
@@ -69,11 +61,9 @@
             padding: 5px;
         }
 
-
         #burger-menu a:hover {
             background-color: #E5B8C7;
         }
-
 
         /* Logo */
         .logo {
@@ -84,33 +74,6 @@
             cursor: pointer;
         }
 
-
-        /* Bouton retour */
-        .back-button {
-            position: absolute;
-            top: 150px; /* Bouton déplacé plus bas */
-            left: 15px;
-            background-color: #F5D6E0;
-            color: white;
-        }
-
-        #burger-menu {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            background-color: #F5D6E0;
-            border: 1px solid #E5B8C7;
-            padding: 10px;
-            z-index: 1000;
-        }
-
-
-        .back-button:hover {
-            background-color: #E5B8C7;
-        }
-
-
         /* Tableau */
         .table-container {
             margin: 80px auto;
@@ -118,13 +81,11 @@
             text-align: center;
         }
 
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 30px;
         }
-
 
         th, td {
             padding: 10px;
@@ -132,12 +93,10 @@
             border: 1px solid #ddd;
         }
 
-
         th {
             background-color: #E5B8C7;
             color: white;
         }
-
 
         button {
             background-color: #F5D6E0;
@@ -148,11 +107,9 @@
             cursor: pointer;
         }
 
-
         button:hover {
             background-color: #E5B8C7;
         }
-
 
         .add-button {
             margin: 20px 0;
@@ -163,6 +120,26 @@
             border-radius: 5px;
             cursor: pointer;
             display: inline-block;
+        }
+
+        /* Bouton retour */
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #F5D6E0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #E5B8C7;
         }
     </style>
 </head>
@@ -183,7 +160,8 @@
             <table>
                 <thead>
                     <tr>
-                        
+                        <th>Variable</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="variablesTable">
@@ -206,55 +184,55 @@
             <button class="add-button" onclick="window.location.href='ajoutconfig.html'">Ajouter une variable</button>
         </div>
     </main>
+
+    <!-- Bouton Retour -->
+    <button class="back-button" onclick="history.back()">← Retour</button>
+
     <script>
         // Gestion du menu burger
-        document.addEventListener('DOMContentLoaded', () => {
-    fetchVariables();
-});
-
-async function fetchVariables() {
-    try {
-        // Faites une requête GET à l'API
-        const response = await fetch('http://localhost:3000/variable');
-
-        if (!response.ok) {
-            throw new Error('Erreur lors de la récupération des données');
-        }
-        const variables = await response.json();
-
-        // Référence à l'élément tbody
-        const tableBody = document.getElementById('variablesTable');
-
-        // Nettoyez les anciennes lignes si nécessaires
-        tableBody.innerHTML = '';
-
-        // Ajoutez chaque variable comme une ligne du tableau
-        variables.forEach(variable => {
-            const row = document.createElement('tr');
-
-            row.innerHTML = `
-                <td>${variable.Nom}</td>
-                <td>
-                    <button onclick="modifierVariable('${variable.Nom}')">Modifier</button>
-                    <button onclick="supprimerVariable(this)">Supprimer</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
-    } catch (error) {
-        console.error("Erreur :", error.message);
-    }
-}
 
-function supprimerVariable(button) {
-    const row = button.parentElement.parentElement;
-    row.remove();
-}
+        async function fetchVariables() {
+            try {
+                const response = await fetch('http://localhost:3000/variable');
 
-function modifierVariable(variable) {
-    window.location.href = `modifconfig.html?variable=${variable}`;
-}
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des données');
+                }
+                const variables = await response.json();
 
+                const tableBody = document.getElementById('variablesTable');
+                tableBody.innerHTML = '';
+
+                variables.forEach(variable => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${variable.Nom}</td>
+                        <td>
+                            <button onclick="modifierVariable('${variable.Nom}')">Modifier</button>
+                            <button onclick="supprimerVariable(this)">Supprimer</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Erreur :", error.message);
+            }
+        }
+
+        function supprimerVariable(button) {
+            const row = button.parentElement.parentElement;
+            row.remove();
+        }
+
+        function modifierVariable(variable) {
+            window.location.href = `modifconfig.html?variable=${variable}`;
+        }
+
+        fetchVariables();
     </script>
 </body>
 </html>
