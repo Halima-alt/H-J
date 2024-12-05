@@ -11,6 +11,7 @@
             padding: 0;
         }
 
+        /* Barre rose */
         header {
             display: flex;
             justify-content: space-between;
@@ -19,18 +20,64 @@
             padding: 10px 20px;
             position: sticky;
             top: 0;
+            z-index: 1000;
         }
 
+        /* Menu burger */
+        .burger-menu {
+            position: relative;
+        }
+
+        .burger-menu button {
+            background-color: white;
+            color: #F5D6E0;
+            border: 1px solid #F5D6E0;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .burger-menu button:hover {
+            background-color: #E5B8C7;
+            color: white;
+        }
+
+        #burger-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #F5D6E0;
+            border: 1px solid #E5B8C7;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #burger-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        #burger-menu a:hover {
+            background-color: #E5B8C7;
+        }
+
+        /* Logo */
         .logo {
             width: 50px;
             height: auto;
             cursor: pointer;
         }
 
+        /* Bouton retour */
         .back-button {
-            position: absolute;
-            top: 100px; /* Bouton déplacé plus bas */
-            left: 15px;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
             background-color: #F5D6E0;
             color: white;
             border: none;
@@ -46,6 +93,7 @@
             background-color: #E5B8C7;
         }
 
+        /* Formulaire */
         .form-container {
             margin: 50px auto;
             width: 50%;
@@ -75,6 +123,14 @@
 </head>
 <body>
     <header>
+        <div class="burger-menu">
+            <button id="burger-button">☰</button>
+            <div id="burger-menu">
+                <a href="config.html">Config</a>
+                <a href="historique.html">Historique</a>
+                <a href="main.html">Dashboard</a>
+            </div>
+        </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
     </header>
     <div class="back-button" onclick="history.back()">← Retour</div>
@@ -92,10 +148,14 @@
         </div>
     </main>
     <script>
-        document.getElementById("ajoutForm").addEventListener("submit", async (e) => {
-            e.preventDefault(); // Empêche le rechargement de la page
+        document.getElementById("burger-button").addEventListener("click", () => {
+            const menu = document.getElementById("burger-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
 
-            // Récupère les données du formulaire
+        document.getElementById("ajoutForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
             const Nom = document.getElementById("Nom").value;
             const IP = document.getElementById("IP").value;
             const Variable_automate = document.getElementById("Variable_automate").value;
@@ -104,20 +164,12 @@
             const Unité = document.getElementById("Unité").value;
 
             try {
-                // Envoie une requête POST au serveur
                 const response = await fetch('http://localhost:3000/variable', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        Nom,
-                        IP,
-                        Variable_automate,
-                        Adresse_Mot,
-                        Fréquence,
-                        Unité,
-                    }),
+                    body: JSON.stringify({ Nom, IP, Variable_automate, Adresse_Mot, Fréquence, Unité }),
                 });
 
                 if (!response.ok) {
@@ -126,11 +178,10 @@
                     return;
                 }
 
-                const result = await response.json();
-                alert(`Variable ajoutée avec succès : ID ${result.id}, Nom ${result.Nom}`);
-                document.getElementById("ajoutForm").reset(); // Réinitialise le formulaire
+                alert("Variable ajoutée avec succès !");
+                document.getElementById("ajoutForm").reset();
             } catch (error) {
-                console.error('Erreur lors de la requête POST :', error);
+                console.error("Erreur lors de l'ajout :", error);
                 alert("Erreur lors de l'ajout de la variable.");
             }
         });
