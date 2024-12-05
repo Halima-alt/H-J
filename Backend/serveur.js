@@ -194,7 +194,7 @@ app.get('/historique', async (req, res) => {
               a.Nom AS Nom_Automate,
               v.Fréquence,
               t.Valeur,
-              t.Date,
+              DATE(t.Date) AS Date, -- Tronque la date pour ne garder que YYYY-MM-DD
               v.Unité
           FROM tableauvaleur t
           INNER JOIN variable v ON t.ID_Variable = v.ID_Variable
