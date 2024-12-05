@@ -80,6 +80,28 @@ app.get('/variable', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des variables' });
   }
 });
+app.delete('/variable/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const conn = await db.getConnection();
+      console.log(`Tentative de suppression de la variable avec ID: ${id}`);
+
+      const result = await conn.query('DELETE FROM variable WHERE ID_Variable = ?', [id]);
+      conn.release();
+
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ error: 'Variable non trouvée.' });
+      }
+
+      res.status(200).json({ message: `Variable avec ID ${id} supprimée avec succès.` });
+  } catch (error) {
+      console.error('Erreur lors de la suppression de la variable:', error.message);
+      res.status(500).json({ error: 'Erreur lors de la suppression de la variable.', details: error.message });
+  }
+});
+
+
 
 app.post('/automate', async (req, res) => {
   try {

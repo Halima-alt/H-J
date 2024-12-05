@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./frontend:/usr/share/nginx/html
+      - ./Front:/usr/share/nginx/html
       - ./logs/nginx:/var/log/nginx
     depends_on:
       - backend

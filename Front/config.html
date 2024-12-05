@@ -150,7 +150,7 @@
             <div id="burger-menu">
                 <a href="config.html">Config</a>
                 <a href="historique.html">Historique</a>
-                <a href="main.html">Dashboard</a>
+                <a href="index.html">Dashboard</a>
             </div>
         </div>
         <img src="logo.jpg" alt="H&J Logo" class="logo">
@@ -165,20 +165,6 @@
                     </tr>
                 </thead>
                 <tbody id="variablesTable">
-                    <tr>
-                        <td>Température</td>
-                        <td>
-                            <button onclick="modifierVariable('Température')">Modifier</button>
-                            <button onclick="supprimerVariable(this)">Supprimer</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Voyant</td>
-                        <td>
-                            <button onclick="modifierVariable('Voyant')">Modifier</button>
-                            <button onclick="supprimerVariable(this)">Supprimer</button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
             <button class="add-button" onclick="window.location.href='ajoutconfig.html'">Ajouter une variable</button>
@@ -213,7 +199,8 @@
                         <td>${variable.Nom}</td>
                         <td>
                             <button onclick="modifierVariable('${variable.Nom}')">Modifier</button>
-                            <button onclick="supprimerVariable(this)">Supprimer</button>
+                            <button onclick="supprimerVariable(${variable.ID_Variable}, this)">Supprimer</button>
+                            <button onclick="voirHistorique(${variable.ID_Variable})">Historique</button>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -223,13 +210,28 @@
             }
         }
 
-        function supprimerVariable(button) {
-            const row = button.parentElement.parentElement;
-            row.remove();
+        async function supprimerVariable(variableId, button) {
+            try {
+                const response = await fetch(`http://localhost:3000/variable/${variableId}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la suppression de la variable');
+                }
+                alert('Variable supprimée avec succès');
+                const row = button.parentElement.parentElement;
+                row.remove();
+            } catch (error) {
+                console.error("Erreur :", error.message);
+            }
         }
 
         function modifierVariable(variable) {
             window.location.href = `modifconfig.html?variable=${variable}`;
+        }
+
+        function voirHistorique(variableId) {
+            window.location.href = `historique.html?variableId=${variableId}`;
         }
 
         fetchVariables();
