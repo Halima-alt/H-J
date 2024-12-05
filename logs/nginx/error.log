@@ -4100,3 +4100,23 @@
 2024/12/05 10:03:02 [notice] 1#1: OS: Linux 5.15.167.4-microsoft-standard-WSL2
 2024/12/05 10:03:02 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
 2024/12/05 10:03:02 [notice] 1#1: start worker processes
+2024/12/05 10:03:02 [notice] 1#1: start worker process 29
+2024/12/05 10:03:02 [notice] 1#1: start worker process 30
+2024/12/05 10:03:02 [notice] 1#1: start worker process 31
+2024/12/05 10:03:02 [notice] 1#1: start worker process 32
+2024/12/05 10:03:02 [notice] 1#1: start worker process 33
+2024/12/05 10:03:02 [notice] 1#1: start worker process 34
+2024/12/05 10:03:02 [notice] 1#1: start worker process 35
+2024/12/05 10:03:02 [notice] 1#1: start worker process 36
+2024/12/05 10:03:02 [notice] 1#1: start worker process 37
+2024/12/05 10:03:02 [notice] 1#1: start worker process 38
+2024/12/05 10:03:02 [notice] 1#1: start worker process 39
+2024/12/05 10:03:02 [notice] 1#1: start worker process 40
+2024/12/05 10:03:12 [error] 29#29: *1 directory index of "/usr/share/nginx/html/" is forbidden, client: 172.18.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost:8080"
+2024/12/05 10:03:13 [error] 29#29: *1 directory index of "/usr/share/nginx/html/" is forbidden, client: 172.18.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost:8080"
+2024/12/05 10:03:13 [error] 29#29: *1 directory index of "/usr/share/nginx/html/" is forbidden, client: 172.18.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost:8080"
+2024/12/05 10:06:26 [error] 31#31: *3 open() "/usr/share/nginx/html/main.html" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /main.html HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/historique.html"
+2024/12/05 10:10:55 [error] 33#33: *5 open() "/usr/share/nginx/html/main.html" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /main.html HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/historique.html"
+2024/12/05 10:11:50 [error] 33#33: *5 open() "/usr/share/nginx/html/main.html" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /main.html HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/config.html"
+2024/12/05 10:26:08 [error] 38#38: *10 open() "/usr/share/nginx/html/main.html" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /main.html HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/config.html"
+2024/12/05 10:26:09 [error] 38#38: *10 open() "/usr/share/nginx/html/main.html" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /main.html HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/config.html"
