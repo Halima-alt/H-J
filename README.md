@@ -1,69 +1,150 @@
 # H-J
 TP déploiement d'un système web 
 
-Avancé 
-BDD 
-    automate --> Post fonctionne
-    variable --> Post fonctionne
-             --> on peut la voir sur historique
+### README.md
 
+# H-J Application
 
+## Table des matières
+- [Introduction](#introduction)
+- [Technologies utilisées](#technologies-utilisées)
+- [Arborescence](#arborescence)
+- [Configuration](#configuration)
+- [Instructions de lancement](#instructions-de-lancement)
+- [Routes API Backend](#routes-api-backend)
+- [Fonctionnalités Frontend](#fonctionnalités-frontend)
 
-docker --> a fiare depuis le pc 
-    installer wsl avec accès au bios windows pour activer rv? pour linux 
-    installer docker + docker compose  
-    installer node.js parce que pas sur les pc école 
-    docker-compose.yml --> Plusieur images
-        front end
-            image 
-            volume 
-        backend 
-    passer variable en paramètres (mdp/user/...)
-        installer extension .env
-            ignorer par github avec gitignore
-                a l'intérieur mettre variable parce que 
+---
 
-nodemon --> pour redémarrer serveur a chaque fois 
+## Introduction
 
+H-J est une application Web permettant de gérer des variables liées à un système automatisé. L'application propose une interface utilisateur permettant d'ajouter, de modifier, de supprimer et de visualiser les variables, ainsi que d'accéder à un historique.
 
-installer mariadb dans conteneur docker 
+---
 
-nodecron --> https://www.npmjs.com/package/node-cron
-    timer comme dans jenkins 
-    faire un console log a l'intérieur pour voir si ca fonctionne (aparait dans terminal toutes les 10s si choisi)
+## Technologies utilisées
 
+### Backend
+- **Node.js** : Plateforme JavaScript pour construire l'API backend.
+- **Express.js** : Framework pour la gestion des routes et des requêtes HTTP.
+- **MariaDB** : Base de données relationnelle pour stocker les variables et leur historique.
 
-git branch 
-git checkout --> sortir de la branche actuelle 
+### Frontend
+- **HTML5/CSS3** : Pour la création des interfaces utilisateur.
+- **JavaScript** : Pour les interactions dynamiques côté client.
 
-faire la différence entre le frotn et le back 
+### Autres outils
+- **Docker** : Conteneurisation pour simplifier le déploiement.
+- **dotenv** : Gestion des variables d'environnement.
+- **HeidiSQL** : Gestion de la base de données.
 
-installer nodedemon --> https://www.npmjs.com/package/nodemon
-    redémarrage de serveur après chaque changement 
-    git push origin branchquetuveux  
+---
 
-npm install modbus-serial
+## Arborescence
 
+```
+H-J/
+├── Backend/
+│   ├── .env                  # Variables d'environnement
+│   ├── connexion.js          # Connexion à la base de données
+│   ├── serveur.js            # Code serveur principal (routes API)
+│   ├── Dockerfile            # Configuration Docker pour le backend
+│   ├── package.json          # Dépendances Node.js
+│   ├── package-lock.json     # Verrouillage des dépendances
+├── BDD/
+│   ├── new.sql               # Script SQL pour la structure de la base de données
+├── Front/
+│   ├── ajoutconfig.html      # Page pour ajouter une nouvelle variable
+│   ├── config.html           # Page principale pour gérer les variables
+│   ├── historique.html       # Page pour visualiser l'historique des variables
+│   ├── main.html             # Dashboard principal
+│   ├── Modifconfig.html      # Page pour modifier une variable
+│   ├── logo.jpg              # Logo de l'application
+├── logs/                     # Dossier pour les logs du backend
+├── docker-compose.yml        # Orchestration Docker
+├── README.md                 # Documentation du projet
+```
 
+---
 
-coils boolean lampe 
-holding register entier /autre temp 
-AU logique inversé 
+## Configuration
 
-donc connexion.js est capable de lire les data (en 8 bits)
-    Données reçues : [ true,  false, false, false, false, false, false, false ]
-    donc la on lit l'arret d'urgence et donc on peut coi que le 1er bit est true donc il est à 1
+1. **Variables d'environnement** :
+   Créez un fichier `.env` dans le dossier `Backend/` et configurez les variables comme suit :
+   ```
+   DB_HOST=127.0.0.1
+   DB_USER=root
+   DB_PASSWORD=password
+   DB_NAME=deploiement
+   ```
 
-ajout de l'image docker donc il faut soit connecter mes données bdd soit il faut recommencer a créer les tables 
-on peut maintenant sur pc juliette avec connexion.js lancer les valeurs et les enregistrer dans bdd
+2. **Base de données** :
+   - Importez le script SQL `new.sql` dans votre gestionnaire MariaDB/HeidiSQL.
 
+3. **Docker** :
+   - Le fichier `docker-compose.yml` est prêt pour déployer l'application et la base de données.
 
+---
 
+## Instructions de lancement
 
-* faut faire crone pour choisir la fréuqenc des valeurs
-* traquer les valeurs (en mode boolean) de celle qui sont alumé/étinte et les affiché /trquaer que les true/false  --> pon fait tout tourner en meme temps et as de soucis 
-* avoir un dashboard où on affiche les variable qui tourne 
-* mettre en place le lancement de du traquage de chaque données 
-* trouver où ùettre crone 
-    trouver fréqunce dans bdd variable transforme en crone *** et ensuitre le faire tourner 
+### Avec Docker
+1. Lancez Docker et exécutez la commande suivante dans le dossier racine :
+   ```
+   docker-compose up
+   ```
+2. L'application sera accessible à :
+   - Backend : `http://localhost:3000`
+   - Frontend : Ouvrez `index.html` dans un navigateur.
 
+### Sans Docker
+1. Installez Node.js et MariaDB.
+2. Démarrez la base de données avec le script `new.sql`.
+3. Installez les dépendances backend :
+   ```bash
+   cd Backend
+   npm install
+   ```
+4. Lancez le serveur backend :
+   ```bash
+   node serveur.js
+   ```
+5. Accédez aux fichiers HTML dans le dossier `Front/` pour ouvrir l'interface utilisateur.
+
+---
+
+## Routes API Backend
+
+### Variables
+- **GET** `/variable` : Récupère toutes les variables.
+- **GET** `/variable/:id` : Récupère une variable spécifique.
+- **POST** `/variable` : Ajoute une nouvelle variable.
+- **PUT** `/variable/:id` : Met à jour une variable spécifique.
+- **DELETE** `/variable/:id` : Supprime une variable spécifique.
+
+### Historique
+- **GET** `/historique` : Récupère les données historiques des variables.
+
+---
+
+## Fonctionnalités Frontend
+
+### Pages principales :
+- **ajoutconfig.html** : Interface pour ajouter une nouvelle variable avec ses détails (nom, IP, automate, fréquence, unité).
+- **config.html** : Liste les variables avec des options pour modifier ou supprimer.
+- **historique.html** : Affiche l'historique des données enregistrées.
+- **Modifconfig.html** : Affiche les détails d'une variable sélectionnée et permet de les modifier.
+- **main.html** : Tableau de bord principal de l'application.
+
+---
+
+## Notes importantes
+
+1. Assurez-vous que MariaDB fonctionne avant de démarrer le backend.
+2. Modifiez les informations dans `.env` en fonction de votre environnement local ou production.
+3. L'intégration Docker est recommandée pour simplifier le déploiement.
+
+---
+
+### Auteur
+Ce projet a été conçu pour la gestion des systèmes automatisés et l'analyse des données en temps réel.
